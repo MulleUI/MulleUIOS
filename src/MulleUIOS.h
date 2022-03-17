@@ -48,17 +48,25 @@
 #endif
 
 
-
-
 @interface UIWindow( UIEventReceiver) <UIEventReceiver>
+
++ (void) setOSWindowClass:(Class) cls;
++ (void) setOSGraphicsContextClass:(Class) cls;
++ (Class) osWindowClass;
++ (Class) osGraphicsContextClass;
+
 @end
 
 
-@interface CGContext( UIWindow) <UIOSGraphicsContext>
+@interface CGContext( UIWindow) <UIGraphicsContext>
 
-- (id) shareImage:(id) image
-      withContext:(id <UIOSGraphicsContext>) context;
+- (id <UIImage>) shareImage:(id <UIImage>) image
+                withContext:(id <UIGraphicsContext>) context;
 
+@end
+
+
+@interface CGImage( UIImage) <UIImage>
 @end
 
 

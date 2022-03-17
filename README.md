@@ -3,8 +3,8 @@
 #### 💻📱 MulleUIOS provides platform/OS specifica
 
 This project ties the underlying window system, graphics context and drawing
-library together. In theory this could be some kind of ncurses windowing,
-with an ASCII renderere, but in practicality it's this:
+library together. In theory this could be on top of some kind of ncurses
+windowing, with an ASCII renderer. But in practicality it's probably this:
 
 OS      | Windows | Drawing      | State
 --------|---------|--------------|-------
@@ -15,8 +15,8 @@ linux   | GLFW    | nanovg       | Works
 windows | GLFW    | nanovg.d311  | Planned
 
 
-The project is relatively bare, the interesting part of the project
-is the sourcetree.
+The project itself is relatively bare, except for glue code. For instance
+CALayer is made a UILayer in MulleUIOS.
 
 
 ## mulle-sde

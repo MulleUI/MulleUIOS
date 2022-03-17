@@ -1,0 +1,4 @@
+GRAPH_MAX_LEVEL=3
+GRAPH_DIRECTION=LR
+GRAPH_HEADER='glfw [ fillcolor="goldenrod" ];
+nanovg [ fillcolor="goldenrod" ];'

@@ -41,14 +41,36 @@
 
 @implementation UIWindow( OSWindowClass)
 
+static struct
+{
+   Class   contextClass;
+   Class   windowClass;
+} Self;
+
+
++ (void) setOSWindowClass:(Class) cls
+{
+   assert( ! cls || [cls isSubclassOfClass:[GLFWOSWindow class]]);
+   Self.windowClass = cls;
+}
+
+
++ (void) setOSGraphicsContextClass:(Class) cls
+{
+   assert( ! cls || [cls isSubclassOfClass:[CGContext class]]);
+   Self.contextClass = cls;
+}
+
+
 + (Class) osWindowClass
 {
-   return( [GLFWWindow class]);
+   return( Self.windowClass ? Self.windowClass : [GLFWOSWindow class]);
 }
+
 
 + (Class) osGraphicsContextClass
 {
-   return( [CGContext class]);
+   return( Self.contextClass ? Self.contextClass : [CGContext class]);
 }
 
 
@@ -73,7 +95,7 @@
 //
 // This needs to be implemented by the context owner. This is not a bug.
 // setActive: is not supposed to be seen outside of the window setting this
-// context active. (Locking is done in GLFWWindow with the implicit context!)
+// context active. (Locking is done in GLFWOSWindow with the implicit context!)
 //
 @implementation CGContext( UIWindow)
 
@@ -83,8 +105,8 @@
 }
 
 
-- (id) shareImage:(id) image
-      withContext:(id <UIOSGraphicsContext>) otherContext
+- (id <UIImage>) shareImage:(id <UIImage>) image
+                withContext:(id <UIGraphicsContext>) otherContext
 {
    assert( [otherContext isKindOfClass:[CGContext class]]);
 
@@ -101,6 +123,10 @@
 
 // need this to be able to get protocol into runtime
 @implementation CALayer( UILayer)
+@end
+
+
+@implementation CGImage( UIImage)
 @end
 
 
