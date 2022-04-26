@@ -60,6 +60,8 @@
 
 @interface CGContext( UIWindow) <UIGraphicsContext>
 
+// Make sure that image is completey drawn by the GPU before calling this.
+// (use [CGContext barrier])
 - (id <UIImage>) shareImage:(id <UIImage>) image
                 withContext:(id <UIGraphicsContext>) context;
 
