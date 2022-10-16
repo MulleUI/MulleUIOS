@@ -11,6 +11,8 @@ endif()
 # contents selected with patternfile ??-source--sources
 #
 set( SOURCES
+src/MulleUIOS-GLFW.m
+src/MulleUIOS-SDL.m
 src/MulleUIOS.m
 )
 

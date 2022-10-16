@@ -1,0 +1,3 @@
+mulle-testallocator;${MULLE_TESTALLOCATOR_NODETYPE:-tar};no-import,no-singlephase;00298420-0006-438C-8667-AB2D3BDC749C;${MULLE_TESTALLOCATOR_URL:-https://github.com/mulle-core/mulle-testallocator/archive/${MULLE_TAG}.tar.gz};;${MULLE_TESTALLOCATOR_TAG:-latest};;
+MulleUIOS;${MULLE_UIOS_NODETYPE:-tar};;58A979FE-E9D7-4381-A2FB-D99068071F05;${MULLE_UIOS_URL:-https://github.com/MulleUI/MulleUIOS/archive/${MULLE_TAG}.tar.gz};;${MULLE_UIOS_TAG:-latest};;
+Foundation-startup;${FOUNDATION_STARTUP_NODETYPE:-tar};no-dynamic-link,no-header,no-intermediate-link;4EC94D06-9879-4973-BB1B-4D71A5386FD7;${FOUNDATION_STARTUP_URL:-https://github.com/MulleFoundation/Foundation-startup/archive/${MULLE_TAG}.tar.gz};${FOUNDATION_STARTUP_BRANCH};${FOUNDATION_STARTUP_TAG:-latest};;

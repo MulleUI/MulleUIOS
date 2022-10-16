@@ -2,6 +2,13 @@
 
 #### 💻📱 MulleUIOS provides platform/OS specifica
 
+
+===
+MEMO: This is actually MulleUIOSGLFWNanoVG or so, there needs to be another
+      project called MulleUISDLNanoVG or MulleUISDLSkia that mixes backend
+      and drawing library. (Or use different configs ?)
+===
+
 This project ties the underlying window system, graphics context and drawing
 library together. In theory this could be on top of some kind of ncurses
 windowing, with an ASCII renderer. But in practicality it's probably this:
@@ -18,6 +25,8 @@ windows | GLFW    | nanovg.d311  | Planned
 The project itself is relatively bare, except for glue code. For instance
 CALayer is made a UILayer in MulleUIOS.
 
+Also this project contains quite a few leak and functionality tests.
+
 
 ## mulle-sde
 
@@ -27,8 +36,8 @@ recursive package management with cross-platform builds via **cmake**:
 Action  | Command                               | Description
 --------|---------------------------------------|---------------
 Build   | `mulle-sde craft [--release|--debug]` | Builds into local `kitchen` folder
-Add     | `mulle-sde dependency add --c --github <|GITHUB_USER|> MulleUIOS` | Add MulleUIOS to another mulle-sde project as a dependency
-Install | `mulle-sde install --prefix /usr/local https://github.com/<|GITHUB_USER|>/MulleUIOS.git` | Like `make install`
+Add     | `mulle-sde dependency add --c --github MulleUI MulleUIOS` | Add MulleUIOS to another mulle-sde project as a dependency
+Install | `mulle-sde install --prefix /usr/local https://github.com/MulleUI/MulleUIOS.git` | Like `make install`
 
 
 ### Manual Installation
@@ -36,21 +45,21 @@ Install | `mulle-sde install --prefix /usr/local https://github.com/<|GITHUB_USE
 
 Install the requirements:
 
-Requirements                                      | Description
---------------------------------------------------|-----------------------
-[some-requirement](//github.com/some/requirement) | Some requirement
+Requirements                                        | Description
+----------------------------------------------------|-----------------------
+[MulleGraphics](//github.com/MulleUI/MulleGraphics) | pulls in nanovg
+[MulleGLFW](//github.com/MulleUI/MulleGLFW)         | pulls in glfw
+[MulleUIWindow](//github.com/MulleUI/MulleUIWindow) | generic view/window code
 
 Install into `/usr/local`:
 
-```
-mkdir build 2> /dev/null
-(
-   cd build ;
-   cmake -DCMAKE_INSTALL_PREFIX=/usr/local \
-         -DCMAKE_PREFIX_PATH=/usr/local \
-         -DCMAKE_BUILD_TYPE=Release .. ;
-   make install
-)
+``` sh
+cmake -B build \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      -DCMAKE_PREFIX_PATH=/usr/local \
+      -DCMAKE_BUILD_TYPE=Release &&
+cmake --build build --config Release &&
+cmake --install build --config Release
 ```
 
 

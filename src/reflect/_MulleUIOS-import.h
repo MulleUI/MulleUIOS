@@ -13,37 +13,37 @@
 
 // You can tweak the following #import with these commands.
 // (Use 13E10672-0B34-42EA-87FD-1868955A062F instead of MulleGraphics if there are duplicate entries)
-//    remove:             `mulle-sde dependency mark MulleGraphics no-header`
-//    rename:             `mulle-sde dependency|library set MulleGraphics include whatever.h`
-//    reorder:            `mulle-sde dependency move MulleGraphics <up|down>`
+//    remove #import: : `mulle-sde dependency mark MulleGraphics no-header`
+//    rename:              `mulle-sde dependency|library set MulleGraphics include whatever.h`
+//    reorder:             `mulle-sde dependency move MulleGraphics <up|down>`
 //    toggle #import:     `mulle-sde dependency mark MulleGraphics [no-]import`
-//    toggle public:      `mulle-sde dependency mark MulleGraphics [no-]public`
-//    toggle optional:    `mulle-sde dependency mark MulleGraphics [no-]require`
-//    remove for platform:`mulle-sde dependency mark MulleGraphics no-platform-<uname>`
+//    toggle public:       `mulle-sde dependency mark MulleGraphics [no-]public`
+//    toggle optional:     `mulle-sde dependency mark MulleGraphics [no-]require`
+//    remove for platform: `mulle-sde dependency mark MulleGraphics no-platform-<uname>`
 //        (use `mulle-sourcetree-to-c --unames` to list known values)
 #import <MulleGraphics/MulleGraphics.h>   // MulleGraphics
 
 // You can tweak the following #import with these commands.
 // (Use 16387667-EF51-4398-886E-2EF4861B95CD instead of MulleGLFW if there are duplicate entries)
-//    remove:             `mulle-sde dependency mark MulleGLFW no-header`
-//    rename:             `mulle-sde dependency|library set MulleGLFW include whatever.h`
-//    reorder:            `mulle-sde dependency move MulleGLFW <up|down>`
+//    remove #import: : `mulle-sde dependency mark MulleGLFW no-header`
+//    rename:              `mulle-sde dependency|library set MulleGLFW include whatever.h`
+//    reorder:             `mulle-sde dependency move MulleGLFW <up|down>`
 //    toggle #import:     `mulle-sde dependency mark MulleGLFW [no-]import`
-//    toggle public:      `mulle-sde dependency mark MulleGLFW [no-]public`
-//    toggle optional:    `mulle-sde dependency mark MulleGLFW [no-]require`
-//    remove for platform:`mulle-sde dependency mark MulleGLFW no-platform-<uname>`
+//    toggle public:       `mulle-sde dependency mark MulleGLFW [no-]public`
+//    toggle optional:     `mulle-sde dependency mark MulleGLFW [no-]require`
+//    remove for platform: `mulle-sde dependency mark MulleGLFW no-platform-<uname>`
 //        (use `mulle-sourcetree-to-c --unames` to list known values)
 #import <MulleGLFW/MulleGLFW.h>   // MulleGLFW
 
 // You can tweak the following #import with these commands.
 // (Use 3599C463-9884-4E8B-B220-8D5E354C1D8B instead of MulleUIWindow if there are duplicate entries)
-//    remove:             `mulle-sde dependency mark MulleUIWindow no-header`
-//    rename:             `mulle-sde dependency|library set MulleUIWindow include whatever.h`
-//    reorder:            `mulle-sde dependency move MulleUIWindow <up|down>`
+//    remove #import: : `mulle-sde dependency mark MulleUIWindow no-header`
+//    rename:              `mulle-sde dependency|library set MulleUIWindow include whatever.h`
+//    reorder:             `mulle-sde dependency move MulleUIWindow <up|down>`
 //    toggle #import:     `mulle-sde dependency mark MulleUIWindow [no-]import`
-//    toggle public:      `mulle-sde dependency mark MulleUIWindow [no-]public`
-//    toggle optional:    `mulle-sde dependency mark MulleUIWindow [no-]require`
-//    remove for platform:`mulle-sde dependency mark MulleUIWindow no-platform-<uname>`
+//    toggle public:       `mulle-sde dependency mark MulleUIWindow [no-]public`
+//    toggle optional:     `mulle-sde dependency mark MulleUIWindow [no-]require`
+//    remove for platform: `mulle-sde dependency mark MulleUIWindow no-platform-<uname>`
 //        (use `mulle-sourcetree-to-c --unames` to list known values)
 #import <MulleUIWindow/MulleUIWindow.h>   // MulleUIWindow
 

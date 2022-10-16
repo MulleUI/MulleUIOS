@@ -48,7 +48,7 @@
 #endif
 
 
-@interface UIWindow( UIEventReceiver) <UIEventReceiver>
+@interface UIWindow( OSWindowClass) <UIEventReceiver>
 
 + (void) setOSWindowClass:(Class) cls;
 + (void) setOSGraphicsContextClass:(Class) cls;
@@ -89,5 +89,19 @@
 @property( observable) CGColor      backgroundColor;
 @property( observable) CGPoint      pixelCenter;
 @property( observable) BOOL         masksToBounds;
+
+@end
+
+
+@interface UIWindow( CALayer)
+
+@property( dynamic) CALayerDrawCallback_t    *drawCallback;
+
+@end 
+
+
+@interface CAOpenGLLayer( GLFW)
+
+- (NSUInteger) windowStyleMaskBits;
 
 @end
