@@ -14,6 +14,7 @@ set( SOURCES
 src/MulleUIOS-GLFW.m
 src/MulleUIOS-SDL.m
 src/MulleUIOS.m
+src/UIWindow+CGColor.m
 )
 
 #

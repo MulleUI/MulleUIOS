@@ -41,6 +41,9 @@
 
 #ifdef HAVE_IMPORT__MULLE_GLFW
 
+#pragma clang diagnostic ignored "-Wprotocol"
+
+
 @implementation UIWindow( OSWindowClass)
 
 static struct

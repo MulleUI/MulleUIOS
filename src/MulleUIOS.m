@@ -37,16 +37,26 @@
 
 #import "import-private.h"
 
+//#define ACTIVE_DEBUG
 
 //
 // This needs to be implemented by the context owner. This is not a bug.
 // setActive: is not supposed to be seen outside of the window setting this
 // context active. (Locking is done in GLFWOSWindow with the implicit context!)
 //
+#pragma clang diagnostic ignored "-Wprotocol"
+
 @implementation CGContext( UIWindow)
 
 - (void) setActive:(BOOL) flag
 {
+#ifdef ACTIVE_DEBUG
+   if( _isActive != flag)
+      MulleUILog( "<%@ %p> transitions from %s to %s",
+                  self, self,
+                  _isActive ? "YES": "NO",
+                  flag ? "YES": "NO");
+#endif
    _isActive = flag;
 }
 

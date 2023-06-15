@@ -81,14 +81,14 @@
 //
 @interface UIView( CALayerForwarding)
 
-@property void                      (*drawCallback)( CALayer *, CGContext *ctxt);
-@property( observable) CGFloat      cornerRadius;
-@property( observable) CGFloat      borderWidth;
-@property( observable) CGFloat      opacity;
-@property( observable) CGColor      borderColor;
-@property( observable) CGColor      backgroundColor;
-@property( observable) CGPoint      pixelCenter;
-@property( observable) BOOL         masksToBounds;
+@property( assign) CALayerDrawCallback_t    *drawCallback;
+@property( observable) CGFloat              cornerRadius;
+@property( observable) CGFloat              borderWidth;
+@property( observable) CGFloat              opacity;
+@property( observable) CGColor              borderColor;
+@property( observable) CGColor              backgroundColor;
+@property( observable) CGPoint              pixelCenter;
+@property( observable) BOOL                 masksToBounds;
 
 @end
 

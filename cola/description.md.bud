@@ -1,0 +1,31 @@
+
+# MulleUIOS
+
+#### 💻📱 MulleUIOS provides platform/OS specifica
+
+
+===
+MEMO: This is actually MulleUIOSGLFWNanoVG or so, there needs to be another
+      project called MulleUISDLNanoVG or MulleUISDLSkia that mixes backend
+      and drawing library. (Or use different configs ?)
+===
+
+This project ties the underlying window system, graphics context and drawing
+library together. In theory this could be on top of some kind of ncurses
+windowing, with an ASCII renderer. But in practicality it's probably this:
+
+OS      | Windows | Drawing      | State
+--------|---------|--------------|-------
+android | ???     | nanovg       | Planned
+darwin  | GLFW    | nanovg.metal | Experimental
+ios     | ???     | nanovg.metal | Planned
+linux   | GLFW    | nanovg       | Works
+windows | GLFW    | nanovg.d311  | Planned
+
+
+The project itself is relatively bare, except for glue code. For instance
+CALayer is made a UILayer in MulleUIOS.
+
+Also this project contains quite a few leak and functionality tests.
+
+
