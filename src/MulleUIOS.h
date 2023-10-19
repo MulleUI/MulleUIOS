@@ -82,13 +82,17 @@
 @interface UIView( CALayerForwarding)
 
 @property( assign) CALayerDrawCallback_t    *drawCallback;
-@property( observable) CGFloat              cornerRadius;
+@property( observable) MulleCornerInsets    cornerInsets;
 @property( observable) CGFloat              borderWidth;
 @property( observable) CGFloat              opacity;
-@property( observable) CGColor              borderColor;
-@property( observable) CGColor              backgroundColor;
+@property( observable) CGPaint              *borderPaint;
+@property( observable) CGPaint              *backgroundPaint;
 @property( observable) CGPoint              pixelCenter;
-@property( observable) BOOL                 masksToBounds;
+@property( assign) BOOL                     masksToBounds;
+
+- (void) setBorderColor:(CGColor) color;
+- (void) setBackgroundColor:(CGColor) color;
+- (void) setCornerRadius:(CGFloat) radius;
 
 @end
 
@@ -100,8 +104,3 @@
 @end 
 
 
-@interface CAOpenGLLayer( GLFW)
-
-- (NSUInteger) windowStyleMaskBits;
-
-@end

@@ -60,6 +60,7 @@ src/include.h
 set( PUBLIC_HEADERS
 src/MulleObjCLoader+MulleUIOS.h
 src/MulleUIOS.h
+src/UIView+CAShadowLayer.h
 src/UIWindow+CGColor.h
 src/reflect/_MulleUIOS-include-public.h
 )

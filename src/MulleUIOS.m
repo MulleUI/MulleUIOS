@@ -93,6 +93,25 @@
    return( [CALayer class]);
 }
 
+
+//
+// a layout context, is stored on a per thread basis. It's actually not
+// UIWindow based.
+//
+- (id <UILayoutContext>) layoutContext
+{
+   id <UILayoutContext>  context;
+
+   context = MulleThreadObjectForKeyUTF8String( "UILayoutContext");
+   if( ! context)
+   {
+      context = [[CGLayoutContext new] autorelease];
+      MulleThreadSetObjectForKeyUTF8String( context, "UILayoutContext");
+   }
+
+   return( context);
+}
+
 @end
 
 
@@ -112,13 +131,3 @@
 }
 
 @end 
-
-
-@implementation CAOpenGLLayer( GLFW)
-
-- (NSUInteger) windowStyleMaskBits
-{
-   return( UIWindowOpenGLDeprecated);
-}
-
-@end

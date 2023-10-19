@@ -21,7 +21,7 @@ int   main( int argc, char *argv[])
 
    offScreenContext = [window activateOffscreenGraphicsContext];
    layer = [CGLayer layerWithBitmapSize:MulleIntegerSizeMake( 20, 20)
-                             imageFlags:0
+                           textureFlags:0
                                 context:offScreenContext];
    [offScreenContext recycleFramebuffer:layer];
    [window deactivateGraphicsContext:offScreenContext];

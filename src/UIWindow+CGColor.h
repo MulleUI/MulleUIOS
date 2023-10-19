@@ -45,6 +45,10 @@
 
 @interface UIWindow( CGColor)
 
-@property( assign) CGColor   backgroundColor;
+@property( assign, dynamic) CGColor   backgroundColor;
+
+// only monochrome colors possible
+- (CGPaint *) backgroundPaint;
+- (void) setBackgroundPaint:(CGPaint *) paint;
 
 @end

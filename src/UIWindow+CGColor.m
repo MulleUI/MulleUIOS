@@ -50,4 +50,16 @@
    _backgroundHexColor = CGHexColorMakeWithColor( color);
 }
 
+
+- (CGPaint *) backgroundPaint
+{
+   return( [CGPaint paintWithHexColor:_backgroundHexColor]);
+}
+
+
+- (void) setBackgroundPaint:(CGPaint *) paint
+{
+   _backgroundHexColor = CGHexColorMakeWithColor( [paint mainColor]);
+}
+
 @end

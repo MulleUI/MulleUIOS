@@ -33,7 +33,7 @@ int   main( int argc, char *argv[])
 
    context = [window activateWindowGraphicsContext];
    [[[CGImage alloc] initWithBitmap:bitmap
-                         imageFlags:0
+                       textureFlags:0
                             context:context] autorelease];
    [app terminate];
 

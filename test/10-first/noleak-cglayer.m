@@ -21,7 +21,7 @@ int   main( int argc, char *argv[])
 
    context = [window activateWindowGraphicsContext];
    [CGLayer layerWithBitmapSize:MulleIntegerSizeMake( 100, 100)
-                     imageFlags:0
+                   textureFlags:0
                         context:context];
    [app terminate];
 
