@@ -20,7 +20,7 @@ int   main( int argc, char *argv[])
    [app addWindow:window];
 
    context = [window activateWindowGraphicsContext];
-   [CGLayer layerWithBitmapSize:MulleIntegerSizeMake( 100, 100)
+   [CGFramebuffer framebufferWithBitmapSize:CGPixelSizeMake( 100, 100)
                    textureFlags:0
                         context:context];
    [app terminate];

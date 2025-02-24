@@ -23,7 +23,7 @@ int   main( void)
       fprintf( stderr, "viewWithFrame: failed\n");
       exit( 1);
    }
-   [window addSubview:view];
+   [window setView:view];
 
    [app addWindow:window];
    [app terminate];

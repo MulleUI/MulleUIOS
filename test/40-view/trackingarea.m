@@ -24,7 +24,7 @@ int   main( void)
       fprintf( stderr, "viewWithFrame: failed\n");
       exit( 1);
    }
-   [window addSubview:view];
+   [window setView:view];
 
    area = [UITrackingArea trackingAreaWithRect:CGRectMake( 0, 0, 8, 8)];
    [view addTrackingArea:area];   

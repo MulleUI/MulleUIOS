@@ -3,6 +3,11 @@
 #### 💻📱 MulleUIOS provides platform/OS specifica
 
 
+# MulleUIOS
+
+#### 💻📱 MulleUIOS provides platform/OS specifica
+
+
 ===
 MEMO: This is actually MulleUIOSGLFWNanoVG or so, there needs to be another
       project called MulleUISDLNanoVG or MulleUISDLSkia that mixes backend
@@ -28,30 +33,70 @@ CALayer is made a UILayer in MulleUIOS.
 Also this project contains quite a few leak and functionality tests.
 
 
-## mulle-sde
 
-This is a [mulle-sde](//github.com/mulle-sde) project. mulle-sde combines
-recursive package management with cross-platform builds via **cmake**:
 
-Action  | Command                               | Description
---------|---------------------------------------|---------------
-Build   | `mulle-sde craft [--release|--debug]` | Builds into local `kitchen` folder
-Add     | `mulle-sde dependency add --c --github MulleUI MulleUIOS` | Add MulleUIOS to another mulle-sde project as a dependency
-Install | `mulle-sde install --prefix /usr/local https://github.com/MulleUI/MulleUIOS.git` | Like `make install`
 
+| Release Version                                       | Release Notes
+|-------------------------------------------------------|--------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleUIOS.svg?branch=release) [![Build Status](https://github.com/MulleUI/MulleUIOS/workflows/CI/badge.svg?branch=release)](//github.com/MulleUI/MulleUIOS/actions) | [RELEASENOTES](RELEASENOTES.md) |
+
+
+
+
+
+
+### You are here
+
+![Overview](overview.dot.svg)
+
+
+
+
+
+## Add
+
+Use [mulle-sde](//github.com/mulle-sde) to add MulleUIOS to your project:
+
+``` sh
+mulle-sde add github:MulleUI/MulleUIOS
+```
+
+To only add the sources of MulleUIOS with dependency
+sources use [clib](https://github.com/clibs/clib):
+
+
+``` sh
+clib install --out src/MulleUI MulleUI/MulleUIOS
+```
+
+Add `-isystem src/MulleUI` to your `CFLAGS` and compile all the sources that were downloaded with your project.
+
+
+## Install
+
+### Install with mulle-sde
+
+Use [mulle-sde](//github.com/mulle-sde) to build and install MulleUIOS and all dependencies:
+
+``` sh
+mulle-sde install --prefix /usr/local \
+   https://github.com/MulleUI/MulleUIOS/archive/latest.tar.gz
+```
 
 ### Manual Installation
 
-
 Install the requirements:
 
-Requirements                                        | Description
-----------------------------------------------------|-----------------------
-[MulleGraphics](//github.com/MulleUI/MulleGraphics) | pulls in nanovg
-[MulleGLFW](//github.com/MulleUI/MulleGLFW)         | pulls in glfw
-[MulleUIWindow](//github.com/MulleUI/MulleUIWindow) | generic view/window code
+| Requirements                                 | Description
+|----------------------------------------------|-----------------------
+| [MulleGraphics](https://github.com/MulleUI/MulleGraphics)             | 🌠 MulleGraphics provides CALayer subclasses
+| [MulleGLFW](https://github.com/MulleUI/MulleGLFW)             | 🌐 MulleGLFW provides platform windows and events
+| [MulleUIFrame](https://github.com/MulleUI/MulleUIFrame)             | 🛸 MulleUIFrame gives MulleUIWindow access to its framebuffer
+| [mulle-objc-list](https://github.com/mulle-objc/mulle-objc-list)             | 📒 Lists mulle-objc runtime information contained in executables.
 
-Install into `/usr/local`:
+Download the latest [tar](https://github.com/MulleUI/MulleUIOS/archive/refs/tags/latest.tar.gz) or [zip](https://github.com/MulleUI/MulleUIOS/archive/refs/tags/latest.zip) archive and unpack it.
+
+Install **MulleUIOS** into `/usr/local` with [cmake](https://cmake.org):
 
 ``` sh
 cmake -B build \
@@ -63,9 +108,9 @@ cmake --install build --config Release
 ```
 
 
-<!--
-extension : mulle-sde/sde
-directory : demo/library
-template  : .../README.md
-Suppress this comment with `export MULLE_SDE_GENERATE_FILE_COMMENTS=NO`
--->
+## Author
+
+[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK  
+
+
+

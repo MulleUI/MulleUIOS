@@ -51,23 +51,30 @@
 - (void) setActive:(BOOL) flag
 {
 #ifdef ACTIVE_DEBUG
-   if( _isActive != flag)
+   if( (_activeThread != nil) != flag)
       MulleUILog( "<%@ %p> transitions from %s to %s",
                   self, self,
-                  _isActive ? "YES": "NO",
+                  (_activeThread != nil) ? "YES": "NO",
                   flag ? "YES": "NO");
 #endif
-   _isActive = flag;
+   _activeThread = flag ? [NSThread currentThread] : nil;
 }
 
 
-- (id <UIImage>) shareImage:(id <UIImage>) image
-                withContext:(id <UIGraphicsContext>) otherContext
+- (id <UIImage>) imageWithFramebuffer:(id <UILayer>) framebuffer
 {
-   assert( [otherContext isKindOfClass:[CGContext class]]);
+   CGFramebuffer   *layer = (CGFramebuffer *) framebuffer;
+   CGImage         *image;
 
-   return( [image shareWithContext:(CGContext *) otherContext]);
+   assert( [framebuffer isKindOfClass:[CGFramebuffer class]]);
+
+   image = [[[CGImage alloc] initWithSharedGPUTexture:[layer sharedGPUTexture]
+                                           bitmapSize:[layer bitmapSize]
+                                         textureFlags:[layer textureFlags]
+                                              context:self] autorelease];
+   return( image);
 }
+
 
 @end
 
@@ -77,8 +84,19 @@
 @end
 
 
+@implementation CALayer( UIOSWindow)
+
+- (instancetype) initWithFrame:(CGRect) frame
+                      OSWindow:(id <UIOSWindow>) window
+{
+   return( [self initWithFrame:frame]);
+}
+
+@end
+
+
 // need this to be able to get protocol into runtime
-@implementation CALayer( UILayer)
+@implementation CGGraphicsLayer( UILayer)
 @end
 
 
@@ -86,17 +104,24 @@
 @end
 
 
-@implementation UIView( CALayer)
+@implementation CGFramebuffer( UIFramebuffer)
+@end
+
+
+@implementation UIView( CGGraphicsLayer)
 
 + (Class) layerClass
 {
-   return( [CALayer class]);
+   return( [CGGraphicsLayer class]);
 }
 
 
 //
 // a layout context, is stored on a per thread basis. It's actually not
 // UIWindow based.
+//
+// MEMO: maybe pass this like a graphics context to the layout routines
+//       breaking a little API compatibilty.
 //
 - (id <UILayoutContext>) layoutContext
 {
@@ -115,19 +140,21 @@
 @end
 
 
-@implementation UIWindow( CALayer)
+@implementation UIWindow( CGGraphicsLayer)
 
-- (CALayerDrawCallback_t *) drawCallback
+- (CGGraphicsLayerDrawCallback_t *) drawCallback
 {
-   return( [[self contentPlane] drawCallback]);
+   return( [[self contentView] drawCallback]);
 }
 
 
-- (void) setDrawCallback:(CALayerDrawCallback_t *) drawStuff
+- (void) setDrawCallback:(CGGraphicsLayerDrawCallback_t *) drawStuff
 {
-   // property clearer will hit us on finalize if things go wrong
-   assert( ! drawStuff || [self contentPlane]);
-   [[self contentPlane] setDrawCallback:drawStuff];
+   // property clearer will hit us on finalize (if things go wrong)
+   assert( ! drawStuff || [self contentView]);
+   [[self contentView] setDrawCallback:drawStuff];
 }
 
 @end 
+
+

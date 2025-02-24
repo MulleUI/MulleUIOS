@@ -1,0 +1,47 @@
+{
+   project =
+   {
+      description="💻📱 MulleUIOS provides platform/OS specifica";
+      domain="github";
+      name="MulleUIOS";
+      user="MulleUI";
+      repo="MulleUIOS";
+      homepage="https://github.com/MulleUI/MulleUIOS";
+      license="UNLICENSED";
+   };
+   dependencies =
+   (
+      {
+         description="🌠 MulleGraphics provides CALayer subclasses";
+         domain="github";
+         name="MulleGraphics";
+         repo="MulleGraphics";
+         url="https://github.com/MulleUI/MulleGraphics";
+         user="MulleUI";
+      },
+      {
+         description="🌐 MulleGLFW provides platform windows and events";
+         domain="github";
+         name="MulleGLFW";
+         repo="MulleGLFW";
+         url="https://github.com/MulleUI/MulleGLFW";
+         user="MulleUI";
+      },
+      {
+         description="🛸 MulleUIFrame gives MulleUIWindow access to its framebuffer";
+         domain="github";
+         name="MulleUIFrame";
+         repo="MulleUIFrame";
+         url="https://github.com/MulleUI/MulleUIFrame";
+         user="MulleUI";
+      },
+      {
+         description="📒 Lists mulle-objc runtime information contained in executables.";
+         domain="github";
+         name="mulle-objc-list";
+         repo="mulle-objc-list";
+         url="https://github.com/mulle-objc/mulle-objc-list";
+         user="mulle-objc";
+      }
+   );
+}

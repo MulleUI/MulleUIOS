@@ -60,10 +60,12 @@
 
 @interface CGContext( UIWindow) <UIGraphicsContext>
 
-// Make sure that image is completey drawn by the GPU before calling this.
+//
+// Make sure that image is completely drawn by the GPU before calling this.
 // (use [CGContext barrier])
-- (id <UIImage>) shareImage:(id <UIImage>) image
-                withContext:(id <UIGraphicsContext>) context;
+// this is used to create a local image from a layer acquired from an
+// offscreen context (otherwise you could just use the layer as a CGImage)
+//
 
 @end
 
@@ -72,23 +74,35 @@
 @end
 
 
-@interface CALayer( UILayer) <UILayer>
+@interface CGFramebuffer( UIFramebuffer) <UIFramebuffer>
+@end
+
+
+@interface CALayer( UIOSWindow)
+
+- (instancetype) initWithFrame:(CGRect) frame
+                      OSWindow:(id <UIOSWindow>) window;
+@end
+
+
+
+@interface CGGraphicsLayer( UILayer) <UILayer>
 @end
 
 
 //
 // these all get fowarded to the "main" layer
 //
-@interface UIView( CALayerForwarding)
+@interface UIView( CGGraphicsLayerForwarding)
 
-@property( assign) CALayerDrawCallback_t    *drawCallback;
-@property( observable) MulleCornerInsets    cornerInsets;
-@property( observable) CGFloat              borderWidth;
-@property( observable) CGFloat              opacity;
-@property( observable) CGPaint              *borderPaint;
-@property( observable) CGPaint              *backgroundPaint;
-@property( observable) CGPoint              pixelCenter;
-@property( assign) BOOL                     masksToBounds;
+@property( assign) CGGraphicsLayerDrawCallback_t    *drawCallback;
+@property( observable) MulleCornerInsets            cornerInsets;
+@property( observable) CGFloat                      borderWidth;
+@property( observable) CGFloat                      opacity;
+@property( observable) CGPaint                      *borderPaint;
+@property( observable) CGPaint                      *backgroundPaint;
+@property( observable) CGPoint                      pixelCenter;
+@property( assign) BOOL                             masksToBounds;
 
 - (void) setBorderColor:(CGColor) color;
 - (void) setBackgroundColor:(CGColor) color;
@@ -97,9 +111,9 @@
 @end
 
 
-@interface UIWindow( CALayer)
+@interface UIWindow( CGGraphicsLayer)
 
-@property( dynamic) CALayerDrawCallback_t    *drawCallback;
+@property( dynamic) CGGraphicsLayerDrawCallback_t    *drawCallback;
 
 @end 
 
