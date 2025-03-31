@@ -37,31 +37,12 @@
 
 #import "import-private.h"
 
-//#define ACTIVE_DEBUG
-
-//
-// This needs to be implemented by the context owner. This is not a bug.
-// setActive: is not supposed to be seen outside of the window setting this
-// context active. (Locking is done in GLFWOSWindow with the implicit context!)
-//
 #pragma clang diagnostic ignored "-Wprotocol"
 
 @implementation CGContext( UIWindow)
 
-- (void) setActive:(BOOL) flag
-{
-#ifdef ACTIVE_DEBUG
-   if( (_activeThread != nil) != flag)
-      MulleUILog( "<%@ %p> transitions from %s to %s",
-                  self, self,
-                  (_activeThread != nil) ? "YES": "NO",
-                  flag ? "YES": "NO");
-#endif
-   _activeThread = flag ? [NSThread currentThread] : nil;
-}
-
-
 - (id <UIImage>) imageWithFramebuffer:(id <UILayer>) framebuffer
+                       nameUTF8String:(char *) nameUTF8String
 {
    CGFramebuffer   *layer = (CGFramebuffer *) framebuffer;
    CGImage         *image;
@@ -71,10 +52,10 @@
    image = [[[CGImage alloc] initWithSharedGPUTexture:[layer sharedGPUTexture]
                                            bitmapSize:[layer bitmapSize]
                                          textureFlags:[layer textureFlags]
+                                       nameUTF8String:nameUTF8String
                                               context:self] autorelease];
    return( image);
 }
-
 
 @end
 
@@ -130,7 +111,7 @@
    context = MulleThreadObjectForKeyUTF8String( "UILayoutContext");
    if( ! context)
    {
-      context = [[CGLayoutContext new] autorelease];
+      context = [[[CGLayoutContext alloc] initWithOSGraphicsContext:nil] autorelease];
       MulleThreadSetObjectForKeyUTF8String( context, "UILayoutContext");
    }
 

@@ -5,9 +5,16 @@ int   main( void)
 {
    UIApplication   *app;
    UIWindow        *window;
+   NSUInteger      styleMask;
 
    app    = [UIApplication sharedInstance];
-   window = [UIWindow windowWithFrame:CGRectMake( 0, 0, 128, 128)];
+
+   styleMask = UIWindowStyleMaskDefault;
+   // this one is retained!
+   styleMask = UIWindowsStyleMaskBySetting( styleMask, UIWindowStyleRetained, YES);
+   window    = [UIWindow windowWithFrame:CGRectMake( 0, 0, 128, 128)
+                         titleUTF8String:"Test"
+                               styleMask:styleMask];
    if( ! window)
    {
       fprintf( stderr, "windowWithFrame: failed\n");

@@ -7,8 +7,7 @@
       { @selector( MulleObjCLoader), @selector( MulleThread) },      // 47a9beb6;MulleObjCLoader;c7c34b28;MulleThread
       { @selector( MulleObjCLoader), @selector( MulleUIApplication) },      // 47a9beb6;MulleObjCLoader;55c305e6;MulleUIApplication
       { @selector( MulleObjCLoader), @selector( MulleUIBase) },      // 47a9beb6;MulleObjCLoader;3ebba954;MulleUIBase
-      { @selector( MulleObjCLoader), @selector( MulleUIGraphicsView) },      // 47a9beb6;MulleObjCLoader;dd720d06;MulleUIGraphicsView
-      { @selector( MulleObjCLoader), @selector( MulleUIGraphicsWindow) },      // 47a9beb6;MulleObjCLoader;2ba37152;MulleUIGraphicsWindow
+      { @selector( MulleObjCLoader), @selector( MulleUIPureWindow) },      // 47a9beb6;MulleObjCLoader;c93157aa;MulleUIPureWindow
       { @selector( MulleObjCLoader), @selector( MulleUIView) },      // 47a9beb6;MulleObjCLoader;58e9d41b;MulleUIView
       { @selector( MulleObjCLoader), @selector( MulleUIWindow) },      // 47a9beb6;MulleObjCLoader;706fd8c7;MulleUIWindow
       { @selector( CALayer), @selector( UIOSWindow) },      // 55df8726;CALayer;68fd105d;UIOSWindow

@@ -78,7 +78,7 @@
 @end
 
 
-@interface CALayer( UIOSWindow)
+@interface CALayer( UIOSWindow) < MulleUINamedObject>
 
 - (instancetype) initWithFrame:(CGRect) frame
                       OSWindow:(id <UIOSWindow>) window;

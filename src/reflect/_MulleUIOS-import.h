@@ -12,19 +12,19 @@
  */
 
 // To remove the following dependency (headers and library) completely:
-//   `mulle-sde dependency remove MulleUIGraphicsWindow`
-// (Use D67EBCFF-7116-4B2C-B7E3-C3A83C087441 instead of MulleUIGraphicsWindow, if there are duplicate entries)
+//   `mulle-sde dependency remove MulleUIWindow`
+// (Use A3B39651-C1CF-491D-99FC-B113E276618F instead of MulleUIWindow, if there are duplicate entries)
 //
 // You can tweak the following #import with these commands:
-//    remove #import      : `mulle-sde dependency mark MulleUIGraphicsWindow no-header`
-//    rename              : `mulle-sde dependency|library set MulleUIGraphicsWindow include whatever.h`
-//    reorder             : `mulle-sde dependency move MulleUIGraphicsWindow <up|down>`
-//    toggle #import      : `mulle-sde dependency mark MulleUIGraphicsWindow [no-]import`
-//    toggle public       : `mulle-sde dependency mark MulleUIGraphicsWindow [no-]public`
-//    toggle optional     : `mulle-sde dependency mark MulleUIGraphicsWindow [no-]require`
-//    remove for platform : `mulle-sde dependency mark MulleUIGraphicsWindow no-platform-<uname>`
+//    remove #import      : `mulle-sde dependency mark MulleUIWindow no-header`
+//    rename              : `mulle-sde dependency|library set MulleUIWindow include whatever.h`
+//    reorder             : `mulle-sde dependency move MulleUIWindow <up|down>`
+//    toggle #import      : `mulle-sde dependency mark MulleUIWindow [no-]import`
+//    toggle public       : `mulle-sde dependency mark MulleUIWindow [no-]public`
+//    toggle optional     : `mulle-sde dependency mark MulleUIWindow [no-]require`
+//    remove for platform : `mulle-sde dependency mark MulleUIWindow no-platform-<uname>`
 //        (use `mulle-sourcetree-to-c --unames` to list known values)
-#import <MulleUIGraphicsWindow/MulleUIGraphicsWindow.h>   // MulleUIGraphicsWindow
+#import <MulleUIWindow/MulleUIWindow.h>   // MulleUIWindow
 
 // To remove the following dependency (headers and library) completely:
 //   `mulle-sde dependency remove MulleGraphics`
