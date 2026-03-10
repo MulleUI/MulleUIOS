@@ -8,12 +8,12 @@ int   main( int argc, char *argv[])
    NSUInteger              styleMask;
    id <UIGraphicsContext>  context;
 
-   app        = [UIApplication object];
+   app        = [UIApplication instance];
 
    assert( ! UIApp); // because we don't use sharedInstance
    styleMask  = UIWindowStyleMaskDefault;
    styleMask &= ~UIWindowStyleRetained;
-   styleMask |= UIWindowStyleInvisible;
+   styleMask |= UIWindowStyleHidden;
    window     = [UIWindow windowWithFrame:CGRectMake( 0, 0, 100, 100)
                           titleUTF8String:NULL
                                 styleMask:styleMask];

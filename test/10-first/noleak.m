@@ -7,11 +7,11 @@ int   main( int argc, char *argv[])
    UIWindow        *window;
    NSUInteger      styleMask;
 
-   app        = [UIApplication object];
+   app        = [UIApplication instance];
    assert( ! UIApp); // because we don't use sharedInstance
    styleMask  = UIWindowStyleMaskDefault;
    styleMask &= ~UIWindowStyleRetained;
-   styleMask |= UIWindowStyleInvisible;
+   styleMask |= UIWindowStyleHidden;
    window     = [[[UIWindow alloc] initWithFrame:CGRectMake( 0, 0, 100, 100)
                                  titleUTF8String:NULL
                                        styleMask:styleMask] autorelease];

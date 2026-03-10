@@ -95,14 +95,15 @@
 //
 @interface UIView( CGGraphicsLayerForwarding)
 
-@property( assign) CGGraphicsLayerDrawCallback_t    *drawCallback;
-@property( observable) MulleCornerInsets            cornerInsets;
-@property( observable) CGFloat                      borderWidth;
-@property( observable) CGFloat                      opacity;
-@property( observable) CGPaint                      *borderPaint;
-@property( observable) CGPaint                      *backgroundPaint;
-@property( observable) CGPoint                      pixelCenter;
-@property( assign) BOOL                             masksToBounds;
+@property( assign) CGGraphicsLayerDrawCallback_t   *drawCallback;
+@property( observable) MulleCornerInsets           cornerInsets;
+@property( observable) CGFloat                     borderWidth;
+@property( observable) CGFloat                     opacity;
+@property( observable) CGPaint                     *borderPaint;
+@property( observable) CGPaint                     *backgroundPaint;
+@property( observable) CGPoint                     anchorPoint;
+@property( observable) CARotation                  rotation;
+@property( assign) BOOL                            masksToBounds;
 
 - (void) setBorderColor:(CGColor) color;
 - (void) setBackgroundColor:(CGColor) color;

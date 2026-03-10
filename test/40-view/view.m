@@ -9,8 +9,8 @@ int   main( void)
    NSUInteger      styleMask;
 
    styleMask = UIWindowStyleMaskDefault;
-   styleMask = UIWindowsStyleMaskBySetting( styleMask, UIWindowStyleRetained, NO);
-   styleMask = UIWindowsStyleMaskBySetting( styleMask, UIWindowStyleOffscreen, YES);
+   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleRetained, NO);
+   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleOffscreen, YES);
 
    app    = [UIApplication sharedInstance];
    window = [UIWindow windowWithFrame:CGRectMake( 0, 0, 128, 128)

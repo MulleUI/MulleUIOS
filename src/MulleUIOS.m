@@ -39,25 +39,7 @@
 
 #pragma clang diagnostic ignored "-Wprotocol"
 
-@implementation CGContext( UIWindow)
 
-- (id <UIImage>) imageWithFramebuffer:(id <UILayer>) framebuffer
-                       nameUTF8String:(char *) nameUTF8String
-{
-   CGFramebuffer   *layer = (CGFramebuffer *) framebuffer;
-   CGImage         *image;
-
-   assert( [framebuffer isKindOfClass:[CGFramebuffer class]]);
-
-   image = [[[CGImage alloc] initWithSharedGPUTexture:[layer sharedGPUTexture]
-                                           bitmapSize:[layer bitmapSize]
-                                         textureFlags:[layer textureFlags]
-                                       nameUTF8String:nameUTF8String
-                                              context:self] autorelease];
-   return( image);
-}
-
-@end
 
 
 // need this to be able to get protocol into runtime
@@ -90,6 +72,9 @@
 
 
 @implementation UIView( CGGraphicsLayer)
+
+// overwrite - (id <UILayoutContext>) layoutContext
+MULLE_OBJC_DEPENDS_ON_CATEGORY( UIView, Layout);
 
 + (Class) layerClass
 {
@@ -135,6 +120,21 @@
    assert( ! drawStuff || [self contentView]);
    [[self contentView] setDrawCallback:drawStuff];
 }
+
+
+//- (UIViewEventCallback *) eventCallback
+//{
+//   return( [[self contentView] eventCallback]);
+//}
+//
+//
+//- (void) setEventCallback:(UIViewEventCallback *) handleEvent
+//{
+//   // property clearer will hit us on finalize (if things go wrong)
+//   assert( ! handleEvent || [self contentView]);
+//   [[self contentView] setEventCallback:handleEvent];
+//}
+//
 
 @end 
 

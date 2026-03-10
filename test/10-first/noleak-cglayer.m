@@ -8,18 +8,18 @@ int   main( int argc, char *argv[])
    NSUInteger      styleMask;
    CGContext       *context;
 
-   app        = [UIApplication object];
+   app        = [UIApplication instance];
    assert( ! UIApp); // because we don't use sharedInstance
    styleMask  = UIWindowStyleMaskDefault;
    styleMask &= ~UIWindowStyleRetained;
-   styleMask |= UIWindowStyleInvisible;
+   styleMask |= UIWindowStyleHidden;
    window     = [[[UIWindow alloc] initWithFrame:CGRectMake( 0, 0, 100, 100)
                                  titleUTF8String:NULL
                                        styleMask:styleMask] autorelease];
    assert( ! UIApp); // because we don't use convenience constructor
    [app addWindow:window];
 
-   context = [window activateWindowGraphicsContext];
+   context = MULLE_OBJC_CLASS_CAST( CGContext, [window activateWindowGraphicsContext]);
    [CGFramebuffer framebufferWithBitmapSize:CGPixelSizeMake( 100, 100)
                    textureFlags:0
                         context:context];

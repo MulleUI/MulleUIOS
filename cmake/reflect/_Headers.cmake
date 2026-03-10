@@ -30,8 +30,6 @@ src/reflect/_MulleUIOS-include-private.h
 set( PRIVATE_GENERIC_HEADERS
 src/generic/import-private.h
 src/generic/include-private.h
-src/import-private.h
-src/include-private.h
 )
 
 #
@@ -50,15 +48,13 @@ src/reflect/_MulleUIOS-provide.h
 set( PUBLIC_GENERIC_HEADERS
 src/generic/import.h
 src/generic/include.h
-src/import.h
-src/include.h
 )
 
 #
 # contents selected with patternfile ??-header--public-headers
 #
 set( PUBLIC_HEADERS
-src/MulleObjCLoader+MulleUIOS.h
+src/MulleObjCDeps+MulleUIOS.h
 src/MulleUIOS.h
 src/UIView+CAShadowLayer.h
 src/UIWindow+CGColor.h

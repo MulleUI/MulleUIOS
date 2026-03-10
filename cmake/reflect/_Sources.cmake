@@ -11,16 +11,20 @@ endif()
 # contents selected with patternfile ??-source--sources
 #
 set( SOURCES
-src/MulleUIOS-GLFW.m
-src/MulleUIOS-SDL.m
 src/MulleUIOS.m
+src/UINullWindow+CG.m
+src/UINullWindow+GLFW.m
+src/UINullWindow+SDL.m
 src/UIView+CAShadowLayer.m
 src/UIWindow+CGColor.m
+src/UIWindow+CG.m
+src/UIWindow+GLFW.m
+src/UIWindow+SDL.m
 )
 
 #
 # contents selected with patternfile ??-source--stage2-sources
 #
 set( STAGE2_SOURCES
-src/MulleObjCLoader+MulleUIOS.m
+src/MulleObjCDeps+MulleUIOS.m
 )

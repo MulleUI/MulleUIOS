@@ -7,11 +7,11 @@ int   main( void)
    UIWindow        *window;
    NSUInteger      styleMask;
 
-   app    = [UIApplication sharedInstance];
+   app       = [UIApplication sharedInstance];
 
    styleMask = UIWindowStyleMaskDefault;
    // this one is retained!
-   styleMask = UIWindowsStyleMaskBySetting( styleMask, UIWindowStyleRetained, YES);
+   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleRetained, YES);
    window    = [UIWindow windowWithFrame:CGRectMake( 0, 0, 128, 128)
                          titleUTF8String:"Test"
                                styleMask:styleMask];

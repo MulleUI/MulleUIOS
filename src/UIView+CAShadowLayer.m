@@ -30,7 +30,7 @@
 
 
 - (void) layoutShadowLayer:(id <UILayer>) layer
-                    inRect:(CGRect) rect
+                layoutInfo:(struct UILayoutInfo *) info
 {
    CAShadowLayer  *shadowLayer = (CAShadowLayer *) layer;
    CGRect         frame;
@@ -39,8 +39,9 @@
    shadowInsets = [shadowLayer shadowInsets];
 
    // create new frame for shadow layer and copy insets down
-   frame = UIEdgeInsetsExtrudeRect( rect, shadowInsets);
+   frame = UIEdgeInsetsExtrudeRect( info->rect, shadowInsets);
    [shadowLayer setFrame:frame];
+   [shadowLayer layoutWithLayoutInfo:info];
 }  
 
 
