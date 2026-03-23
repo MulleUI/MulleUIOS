@@ -3,6 +3,8 @@
    {
       description="💻📱 MulleUIOS provides platform/OS specifica";
       domain="github";
+      language="c";
+      dialect="objc";
       name="MulleUIOS";
       user="MulleUI";
       repo="MulleUIOS";
@@ -12,6 +14,14 @@
    dependencies =
    (
       {
+         description="🛸 MulleUIWindow provides UIWindow and extends UIView functionality";
+         domain="github";
+         name="MulleUIWindow";
+         repo="MulleUIWindow";
+         url="https://github.com/MulleUI/MulleUIWindow";
+         user="MulleUI";
+      },
+      {
          description="🌠 MulleGraphics provides CALayer subclasses";
          domain="github";
          name="MulleGraphics";
@@ -20,19 +30,19 @@
          user="MulleUI";
       },
       {
+         description="🛸 MulleCGNanoVG does something";
+         domain="github";
+         name="MulleCGNanoVG";
+         repo="MulleCGNanoVG";
+         url="https://github.com/MulleUI/MulleCGNanoVG";
+         user="MulleUI";
+      },
+      {
          description="🌐 MulleGLFW provides platform windows and events";
          domain="github";
          name="MulleGLFW";
          repo="MulleGLFW";
          url="https://github.com/MulleUI/MulleGLFW";
-         user="MulleUI";
-      },
-      {
-         description="🛸 MulleUIFrame gives MulleUIWindow access to its framebuffer";
-         domain="github";
-         name="MulleUIFrame";
-         repo="MulleUIFrame";
-         url="https://github.com/MulleUI/MulleUIFrame";
          user="MulleUI";
       },
       {

@@ -1,0 +1,24 @@
+=== Tab Character Rendering Test ===
+
+BUG: Single tab shows non-deterministic values
+Running 10 iterations to demonstrate randomness:
+
+Run  1: Single tab vbounds=0 12.56 0 0
+Run  2: Single tab vbounds=0 12.56 0 0
+Run  3: Single tab vbounds=0 12.56 0 0
+Run  4: Single tab vbounds=0 12.56 0 0
+Run  5: Single tab vbounds=0 12.56 0 0
+Run  6: Single tab vbounds=0 12.56 0 0
+Run  7: Single tab vbounds=0 12.56 0 0
+Run  8: Single tab vbounds=0 12.56 0 0
+Run  9: Single tab vbounds=0 12.56 0 0
+Run 10: Single tab vbounds=0 12.56 0 0
+Expected: A-tab-B should be consistent
+A-tab-B: "A	B", vbounds=-15 0.55 30 12
+
+
+Expected: Three tabs should be consistent
+Three tabs: vbounds=0 12.56 0 0
+
+Root cause: Uninitialized memory in fontstash/stb_truetype
+when fonts lack tab glyph definition (codepoint 9).

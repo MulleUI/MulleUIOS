@@ -124,7 +124,7 @@ endif()
 
 
 #
-# Generated from sourcetree: 13E10672-0B34-42EA-87FD-1868955A062F;MulleGraphics;no-singlephase;
+# Generated from sourcetree: 9A726AAC-CDE6-42BC-8238-3AD11AC47C83;MulleGraphics;no-singlephase;
 # Disable with : `mulle-sourcetree mark MulleGraphics no-link`
 # Disable for this platform: `mulle-sourcetree mark MulleGraphics no-cmake-platform-${MULLE_UNAME}`
 # Disable for a sdk: `mulle-sourcetree mark MulleGraphics no-cmake-sdk-<name>`
@@ -215,6 +215,103 @@ ${MULLE_PREFERRED_LIBRARY_PREFIX}MulleGraphics${MULLE_PREFERRED_LIBRARY_SUFFIX}
 ${MULLE_FALLBACK_LIBRARY_PREFIX}MulleGraphics${CMAKE_DEBUG_POSTFIX}${MULLE_FALLBACK_LIBRARY_SUFFIX}
 ${MULLE_FALLBACK_LIBRARY_PREFIX}MulleGraphics${MULLE_FALLBACK_LIBRARY_SUFFIX}
 MulleGraphics")
+      endif()
+   endif()
+endif()
+
+
+#
+# Generated from sourcetree: 38E30D60-9B1A-4152-9249-69FD832D33C3;MulleCGNanoVG;no-singlephase;
+# Disable with : `mulle-sourcetree mark MulleCGNanoVG no-link`
+# Disable for this platform: `mulle-sourcetree mark MulleCGNanoVG no-cmake-platform-${MULLE_UNAME}`
+# Disable for a sdk: `mulle-sourcetree mark MulleCGNanoVG no-cmake-sdk-<name>`
+#
+if( COLLECT_ALL_LOAD_DEPENDENCY_LIBRARIES_AS_NAMES)
+   list( APPEND ALL_LOAD_DEPENDENCY_LIBRARIES "MulleCGNanoVG")
+else()
+   if( NOT MULLE_CG_NANO_VG_LIBRARY)
+      find_library( MULLE_CG_NANO_VG_LIBRARY NAMES
+         ${MULLE_PREFERRED_LIBRARY_PREFIX}MulleCGNanoVG${CMAKE_DEBUG_POSTFIX}${MULLE_PREFERRED_LIBRARY_SUFFIX}
+         ${MULLE_PREFERRED_LIBRARY_PREFIX}MulleCGNanoVG${MULLE_PREFERRED_LIBRARY_SUFFIX}
+         ${MULLE_FALLBACK_LIBRARY_PREFIX}MulleCGNanoVG${CMAKE_DEBUG_POSTFIX}${MULLE_FALLBACK_LIBRARY_SUFFIX}
+         ${MULLE_FALLBACK_LIBRARY_PREFIX}MulleCGNanoVG${MULLE_FALLBACK_LIBRARY_SUFFIX}
+         MulleCGNanoVG
+         NO_CMAKE_SYSTEM_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_FIND_ROOT_PATH
+      )
+      if( NOT MULLE_CG_NANO_VG_LIBRARY AND NOT DEPENDENCY_IGNORE_SYSTEM_LIBARIES)
+         find_library( MULLE_CG_NANO_VG_LIBRARY NAMES
+            ${MULLE_PREFERRED_LIBRARY_PREFIX}MulleCGNanoVG${CMAKE_DEBUG_POSTFIX}${MULLE_PREFERRED_LIBRARY_SUFFIX}
+            ${MULLE_PREFERRED_LIBRARY_PREFIX}MulleCGNanoVG${MULLE_PREFERRED_LIBRARY_SUFFIX}
+            ${MULLE_FALLBACK_LIBRARY_PREFIX}MulleCGNanoVG${CMAKE_DEBUG_POSTFIX}${MULLE_FALLBACK_LIBRARY_SUFFIX}
+            ${MULLE_FALLBACK_LIBRARY_PREFIX}MulleCGNanoVG${MULLE_FALLBACK_LIBRARY_SUFFIX}
+            MulleCGNanoVG
+         )
+      endif()
+      message( STATUS "MULLE_CG_NANO_VG_LIBRARY is ${MULLE_CG_NANO_VG_LIBRARY}")
+      #
+      # The order looks ascending, but due to the way this file is read
+      # it ends up being descending, which is what we need.
+      #
+      if( MULLE_CG_NANO_VG_LIBRARY)
+         #
+         # Add MULLE_CG_NANO_VG_LIBRARY to ALL_LOAD_DEPENDENCY_LIBRARIES list.
+         # Disable with: `mulle-sourcetree mark MulleCGNanoVG no-cmake-add`
+         #
+         list( APPEND ALL_LOAD_DEPENDENCY_LIBRARIES ${MULLE_CG_NANO_VG_LIBRARY})
+         #
+         # Inherit information from dependency.
+         # Encompasses: no-cmake-searchpath,no-cmake-dependency,no-cmake-loader
+         # Disable with: `mulle-sourcetree mark MulleCGNanoVG no-cmake-inherit`
+         #
+         # temporarily expand CMAKE_MODULE_PATH
+         get_filename_component( _TMP_MULLE_CG_NANO_VG_ROOT "${MULLE_CG_NANO_VG_LIBRARY}" DIRECTORY)
+         get_filename_component( _TMP_MULLE_CG_NANO_VG_ROOT "${_TMP_MULLE_CG_NANO_VG_ROOT}" DIRECTORY)
+         #
+         #
+         # Search for "Definitions.cmake" and "DependenciesAndLibraries.cmake" to include.
+         # Disable with: `mulle-sourcetree mark MulleCGNanoVG no-cmake-dependency`
+         #
+         foreach( _TMP_MULLE_CG_NANO_VG_NAME "MulleCGNanoVG")
+            set( _TMP_MULLE_CG_NANO_VG_DIR "${_TMP_MULLE_CG_NANO_VG_ROOT}/include/${_TMP_MULLE_CG_NANO_VG_NAME}/cmake")
+            # use explicit path to avoid "surprises"
+            if( IS_DIRECTORY "${_TMP_MULLE_CG_NANO_VG_DIR}")
+               list( INSERT CMAKE_MODULE_PATH 0 "${_TMP_MULLE_CG_NANO_VG_DIR}")
+               #
+               include( "${_TMP_MULLE_CG_NANO_VG_DIR}/DependenciesAndLibraries.cmake" OPTIONAL)
+               #
+               list( REMOVE_ITEM CMAKE_MODULE_PATH "${_TMP_MULLE_CG_NANO_VG_DIR}")
+               #
+               unset( MULLE_CG_NANO_VG_DEFINITIONS)
+               unset( MULLE_CG_NANO_VG_RENDEZVOUS_GLOBALS)
+               include( "${_TMP_MULLE_CG_NANO_VG_DIR}/Definitions.cmake" OPTIONAL)
+               list( APPEND INHERITED_DEFINITIONS ${MULLE_CG_NANO_VG_DEFINITIONS})
+               include( "${_TMP_MULLE_CG_NANO_VG_DIR}/Definitions.cmake" OPTIONAL)
+               list( APPEND RENDEZVOUS_GLOBALS ${MULLE_CG_NANO_VG_RENDEZVOUS_GLOBALS})
+               break()
+            else()
+               message( STATUS "${_TMP_MULLE_CG_NANO_VG_DIR} not found")
+            endif()
+         endforeach()
+         #
+         # Search for "MulleObjCDeps+<name>.h" in include directory.
+         # Disable with: `mulle-sourcetree mark MulleCGNanoVG no-cmake-loader`
+         #
+         if( NOT NO_INHERIT_OBJC_DEPS)
+            foreach( _TMP_MULLE_CG_NANO_VG_NAME "MulleCGNanoVG")
+               set( _TMP_MULLE_CG_NANO_VG_FILE "${_TMP_MULLE_CG_NANO_VG_ROOT}/include/${_TMP_MULLE_CG_NANO_VG_NAME}/MulleObjCDeps+${_TMP_MULLE_CG_NANO_VG_NAME}.h")
+               if( EXISTS "${_TMP_MULLE_CG_NANO_VG_FILE}")
+                  list( APPEND INHERITED_OBJC_DEPS ${_TMP_MULLE_CG_NANO_VG_FILE})
+                  break()
+               endif()
+            endforeach()
+         endif()
+      else()
+         # Disable with: `mulle-sourcetree mark MulleCGNanoVG no-require-link`
+         message( SEND_ERROR "MULLE_CG_NANO_VG_LIBRARY was not found in ${MULLE_PREFERRED_LIBRARY_PREFIX}MulleCGNanoVG${CMAKE_DEBUG_POSTFIX}${MULLE_PREFERRED_LIBRARY_SUFFIX}
+${MULLE_PREFERRED_LIBRARY_PREFIX}MulleCGNanoVG${MULLE_PREFERRED_LIBRARY_SUFFIX}
+${MULLE_FALLBACK_LIBRARY_PREFIX}MulleCGNanoVG${CMAKE_DEBUG_POSTFIX}${MULLE_FALLBACK_LIBRARY_SUFFIX}
+${MULLE_FALLBACK_LIBRARY_PREFIX}MulleCGNanoVG${MULLE_FALLBACK_LIBRARY_SUFFIX}
+MulleCGNanoVG")
       endif()
    endif()
 endif()

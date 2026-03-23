@@ -11,12 +11,11 @@ endif()
 # contents selected with patternfile ??-source--sources
 #
 set( SOURCES
+src/CAOpenGLLayer.m
 src/MulleUIOS.m
 src/UINullWindow+CG.m
 src/UINullWindow+GLFW.m
 src/UINullWindow+SDL.m
-src/UIView+CAShadowLayer.m
-src/UIWindow+CGColor.m
 src/UIWindow+CG.m
 src/UIWindow+GLFW.m
 src/UIWindow+SDL.m

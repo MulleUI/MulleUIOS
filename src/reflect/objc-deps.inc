@@ -1,26 +1,6 @@
-      { @selector( MulleObjCDeps), @selector( MulleCA) },      // 47a9beb6;MulleObjCDeps;3422b8ab;MulleCA
-      { @selector( MulleObjCDeps), @selector( MulleCG) },      // 47a9beb6;MulleObjCDeps;d422218a;MulleCG
-      { @selector( MulleObjCDeps), @selector( MulleGLFW) },      // 47a9beb6;MulleObjCDeps;eb45a62c;MulleGLFW
-      { @selector( MulleObjCDeps), @selector( MulleGraphics) },      // 47a9beb6;MulleObjCDeps;d36c3031;MulleGraphics
-      { @selector( MulleObjCDeps), @selector( MulleInvocationQueue) },      // 47a9beb6;MulleObjCDeps;9a5137b3;MulleInvocationQueue
-      { @selector( MulleObjCDeps), @selector( MulleObjCTimeFoundation) },      // 47a9beb6;MulleObjCDeps;cc20d48b;MulleObjCTimeFoundation
-      { @selector( MulleObjCDeps), @selector( MulleThread) },      // 47a9beb6;MulleObjCDeps;c7c34b28;MulleThread
-      { @selector( MulleObjCDeps), @selector( MulleUIApplication) },      // 47a9beb6;MulleObjCDeps;55c305e6;MulleUIApplication
-      { @selector( MulleObjCDeps), @selector( MulleUIBase) },      // 47a9beb6;MulleObjCDeps;3ebba954;MulleUIBase
-      { @selector( MulleObjCDeps), @selector( MulleUIPureWindow) },      // 47a9beb6;MulleObjCDeps;c93157aa;MulleUIPureWindow
-      { @selector( MulleObjCDeps), @selector( MulleUIView) },      // 47a9beb6;MulleObjCDeps;58e9d41b;MulleUIView
-      { @selector( MulleObjCDeps), @selector( MulleUIWindow) },      // 47a9beb6;MulleObjCDeps;706fd8c7;MulleUIWindow
-      { @selector( CALayer), @selector( UIOSWindow) },      // 55df8726;CALayer;68fd105d;UIOSWindow
-      { @selector( CGContext), @selector( UIWindow) },      // 80b7b568;CGContext;895a123f;UIWindow
-      { @selector( CGFramebuffer), @selector( UIFramebuffer) },      // ef762cef;CGFramebuffer;5c6483a1;UIFramebuffer
-      { @selector( CGGraphicsLayer), @selector( UILayer) },      // 754a6374;CGGraphicsLayer;fcc9d94f;UILayer
-      { @selector( CGImage), @selector( UIImage) },      // 6ec55940;CGImage;e1a7d20d;UIImage
+      { @selector( CAOpenGLLayer), MULLE_OBJC_NO_CATEGORYID },      // bdc0ca3d;CAOpenGLLayer;;
       { @selector( UINullWindow), @selector( OSWindowCG) },      // d7aa7e24;UINullWindow;a531a714;OSWindowCG
       { @selector( UINullWindow), @selector( OSWindowGLFW) },      // d7aa7e24;UINullWindow;d9b12630;OSWindowGLFW
-      { @selector( UIView), @selector( CAShadowLayer) },      // 155b6ee8;UIView;8e87a8e1;CAShadowLayer
-      { @selector( UIView), @selector( CGGraphicsLayer) },      // 155b6ee8;UIView;754a6374;CGGraphicsLayer
-      { @selector( UIWindow), @selector( CGColor) },      // 895a123f;UIWindow;94e785ef;CGColor
-      { @selector( UIWindow), @selector( CGGraphicsLayer) },      // 895a123f;UIWindow;754a6374;CGGraphicsLayer
       { @selector( UIWindow), @selector( OSWindowCG) },      // 895a123f;UIWindow;a531a714;OSWindowCG
       { @selector( UIWindow), @selector( OSWindowGLFW) },      // 895a123f;UIWindow;d9b12630;OSWindowGLFW
       { @selector( UIWindow), @selector( UIEventReceiver) },      // 895a123f;UIWindow;cf8e9f44;UIEventReceiver

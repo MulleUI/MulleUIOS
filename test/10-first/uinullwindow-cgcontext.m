@@ -8,13 +8,16 @@ int main( void)
    UIApplication           *app;
    id <UIWindow>           window;
    id <UIGraphicsContext>  context;
+   NSUInteger              styleMask;
 
    app = [UIApplication instance];
 
+   styleMask = UIWindowStyleNoDrawing|UIWindowStyleClearType;
    UINullOSWindow *osw = [[[UINullOSWindow alloc] initWithFrame:CGRectMake( 0, 0, 64, 64)
                                                   titleUTF8String:NULL
-                                                        styleMask:UIWindowStyleMaskDefault] autorelease];
-   window = (id<UIWindow>)[[[UINullWindow alloc] initWithOSWindow:osw] autorelease];
+                                                        styleMask:styleMask] autorelease];
+   window = (id<UIWindow>)[[[UINullWindow alloc] initWithOSWindow:osw
+                                                        styleMask:styleMask] autorelease];
    if( ! window)
    {
       fprintf( stderr, "UINullWindow initWithOSWindow: failed\n");

@@ -28,7 +28,7 @@
 
 // To remove the following dependency (headers and library) completely:
 //   `mulle-sde dependency remove MulleGraphics`
-// (Use 13E10672-0B34-42EA-87FD-1868955A062F instead of MulleGraphics, if there are duplicate entries)
+// (Use 9A726AAC-CDE6-42BC-8238-3AD11AC47C83 instead of MulleGraphics, if there are duplicate entries)
 //
 // You can tweak the following #import with these commands:
 //    remove #import      : `mulle-sde dependency mark MulleGraphics no-header`
@@ -40,6 +40,21 @@
 //    remove for platform : `mulle-sde dependency mark MulleGraphics no-platform-<uname>`
 //        (use `mulle-sourcetree-to-c --unames` to list known values)
 #import <MulleGraphics/MulleGraphics.h>   // MulleGraphics
+
+// To remove the following dependency (headers and library) completely:
+//   `mulle-sde dependency remove MulleCGNanoVG`
+// (Use 38E30D60-9B1A-4152-9249-69FD832D33C3 instead of MulleCGNanoVG, if there are duplicate entries)
+//
+// You can tweak the following #import with these commands:
+//    remove #import      : `mulle-sde dependency mark MulleCGNanoVG no-header`
+//    rename              : `mulle-sde dependency|library set MulleCGNanoVG include whatever.h`
+//    reorder             : `mulle-sde dependency move MulleCGNanoVG <up|down>`
+//    toggle objc         : `mulle-sde dependency mark MulleCGNanoVG [no-]import`
+//    toggle public       : `mulle-sde dependency mark MulleCGNanoVG [no-]public`
+//    toggle optional     : `mulle-sde dependency mark MulleCGNanoVG [no-]require`
+//    remove for platform : `mulle-sde dependency mark MulleCGNanoVG no-platform-<uname>`
+//        (use `mulle-sourcetree-to-c --unames` to list known values)
+#import <MulleCGNanoVG/MulleCGNanoVG.h>   // MulleCGNanoVG
 
 // To remove the following dependency (headers and library) completely:
 //   `mulle-sde dependency remove MulleGLFW`

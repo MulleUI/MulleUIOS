@@ -8,7 +8,6 @@
 #import "MulleUIOS.h"
 #import "import-private.h"
 
-
 #ifdef HAVE_IMPORT__MULLE_CG
 
 #pragma clang diagnostic ignored "-Wprotocol"
@@ -30,27 +29,6 @@ static struct
 + (Class) osGraphicsContextClass
 {
    return( Self.contextClass ? Self.contextClass : [CGContext class]);
-}
-
-@end
-
-// CG helper
-@implementation CGContext( UIWindow)
-
-- (id <UIImage>) imageWithFramebuffer:(id <UILayer>) framebuffer
-                       nameUTF8String:(char *) nameUTF8String
-{
-   CGFramebuffer   *layer = (CGFramebuffer *) framebuffer;
-   CGImage         *image;
-
-   assert( [framebuffer isKindOfClass:[CGFramebuffer class]]);
-
-   image = [[[CGImage alloc] initWithSharedGPUTexture:[layer sharedGPUTexture]
-                                           bitmapSize:[layer bitmapSize]
-                                         textureFlags:[layer textureFlags]
-                                       nameUTF8String:nameUTF8String
-                                              context:self] autorelease];
-   return( image);
 }
 
 @end

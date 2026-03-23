@@ -41,6 +41,8 @@ static struct
    case CG_GL3_2 : hints = SDL_GL3_2_CONTEXT; break;
    case CG_GLES2 : hints = SDL_GLES2_CONTEXT; break;
    case CG_GLES3 : hints = SDL_GLES3_CONTEXT; break;
+   case CG_D3D11 : hints = SDL_D3D11_CONTEXT; break;
+   default       : break;
    }
    return( hints);
 }

@@ -54,10 +54,9 @@ src/generic/include.h
 # contents selected with patternfile ??-header--public-headers
 #
 set( PUBLIC_HEADERS
+src/CAOpenGLLayer.h
 src/MulleObjCDeps+MulleUIOS.h
 src/MulleUIOS.h
-src/UIView+CAShadowLayer.h
-src/UIWindow+CGColor.h
 src/reflect/_MulleUIOS-include-public.h
 )
 

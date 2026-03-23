@@ -7,6 +7,7 @@
 
 #import "MulleUIOS.h"
 #import "import-private.h"
+#import <MulleCGNanoVG/CGContext+nanovg.h>
 
 #ifdef HAVE_IMPORT__MULLE_GLFW
 

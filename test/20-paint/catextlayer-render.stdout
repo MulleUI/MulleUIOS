@@ -1,0 +1,9 @@
+=== CATextLayer Render Test ===
+Created CGContext with NoDrawing and TraceDrawCalls
+Configured CATextLayer: "VfL Bochum 1848"
+Frame: 50 50 300 200
+
+--- Begin Rendering ---
+--- End Rendering ---
+
+Render completed successfully

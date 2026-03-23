@@ -36,9 +36,9 @@ Also this project contains quite a few leak and functionality tests.
 
 
 
-| Release Version                                       | Release Notes
-|-------------------------------------------------------|--------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleUIOS.svg?branch=release) [![Build Status](https://github.com/MulleUI/MulleUIOS/workflows/CI/badge.svg?branch=release)](//github.com/MulleUI/MulleUIOS/actions) | [RELEASENOTES](RELEASENOTES.md) |
+| Release Version                                       | Release Notes  | AI Documentation
+|-------------------------------------------------------|----------------|---------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleUIOS.svg) [![Build Status](https://github.com/MulleUI/MulleUIOS/workflows/CI/badge.svg)](//github.com/MulleUI/MulleUIOS/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for MulleUIOS](https://deepwiki.com/MulleUI/MulleUIOS)
 
 
 
@@ -74,8 +74,6 @@ Add `-isystem src/MulleUI` to your `CFLAGS` and compile all the sources that wer
 
 ## Install
 
-### Install with mulle-sde
-
 Use [mulle-sde](//github.com/mulle-sde) to build and install MulleUIOS and all dependencies:
 
 ``` sh
@@ -83,15 +81,16 @@ mulle-sde install --prefix /usr/local \
    https://github.com/MulleUI/MulleUIOS/archive/latest.tar.gz
 ```
 
-### Manual Installation
+### Legacy Installation
 
 Install the requirements:
 
 | Requirements                                 | Description
 |----------------------------------------------|-----------------------
+| [MulleUIWindow](https://github.com/MulleUI/MulleUIWindow)             | 🛸 MulleUIWindow provides UIWindow and extends UIView functionality
 | [MulleGraphics](https://github.com/MulleUI/MulleGraphics)             | 🌠 MulleGraphics provides CALayer subclasses
+| [MulleCGNanoVG](https://github.com/MulleUI/MulleCGNanoVG)             | 🛸 MulleCGNanoVG does something
 | [MulleGLFW](https://github.com/MulleUI/MulleGLFW)             | 🌐 MulleGLFW provides platform windows and events
-| [MulleUIFrame](https://github.com/MulleUI/MulleUIFrame)             | 🛸 MulleUIFrame gives MulleUIWindow access to its framebuffer
 | [mulle-objc-list](https://github.com/mulle-objc/mulle-objc-list)             | 📒 Lists mulle-objc runtime information contained in executables.
 
 Download the latest [tar](https://github.com/MulleUI/MulleUIOS/archive/refs/tags/latest.tar.gz) or [zip](https://github.com/MulleUI/MulleUIOS/archive/refs/tags/latest.zip) archive and unpack it.
@@ -99,9 +98,11 @@ Download the latest [tar](https://github.com/MulleUI/MulleUIOS/archive/refs/tags
 Install **MulleUIOS** into `/usr/local` with [cmake](https://cmake.org):
 
 ``` sh
-cmake -B build \
-      -DCMAKE_INSTALL_PREFIX=/usr/local \
-      -DCMAKE_PREFIX_PATH=/usr/local \
+PREFIX_DIR="/usr/local"
+cmake -B build                               \
+      -DMULLE_SDK_PATH="${PREFIX_DIR}"       \
+      -DCMAKE_INSTALL_PREFIX="${PREFIX_DIR}" \
+      -DCMAKE_PREFIX_PATH="${PREFIX_DIR}"    \
       -DCMAKE_BUILD_TYPE=Release &&
 cmake --build build --config Release &&
 cmake --install build --config Release
