@@ -14,27 +14,27 @@
    dependencies =
    (
       {
-         description="🛸 MulleUIWindow provides UIWindow and extends UIView functionality";
+         description="🌀 UI for mulle-objc - Desktop and Mobile";
          domain="github";
-         name="MulleUIWindow";
-         repo="MulleUIWindow";
-         url="https://github.com/MulleUI/MulleUIWindow";
+         name="MulleUICore";
+         repo="MulleUICore";
+         url="https://github.com/MulleUI/MulleUICore";
          user="MulleUI";
       },
       {
-         description="🌠 MulleGraphics provides CALayer subclasses";
+         description="🛸 MulleCGNanovg does something";
          domain="github";
-         name="MulleGraphics";
-         repo="MulleGraphics";
-         url="https://github.com/MulleUI/MulleGraphics";
+         name="MulleCGNanovg";
+         repo="MulleCGNanovg";
+         url="https://github.com/MulleUI/MulleCGNanovg";
          user="MulleUI";
       },
       {
-         description="🛸 MulleCGNanoVG does something";
+         description="🛸 MulleCGNanovgGL does something";
          domain="github";
-         name="MulleCGNanoVG";
-         repo="MulleCGNanoVG";
-         url="https://github.com/MulleUI/MulleCGNanoVG";
+         name="MulleCGNanovgGL";
+         repo="MulleCGNanovgGL";
+         url="https://github.com/MulleUI/MulleCGNanovgGL";
          user="MulleUI";
       },
       {

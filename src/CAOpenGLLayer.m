@@ -2,7 +2,7 @@
 
 #import "import-private.h"
 
-#import <MulleCGNanoVG/_MulleCGBackend.h>
+#import <MulleCGNanovg/_MulleCGBackend.h>
 #import <MulleGraphics/CGGraphicsLayer+MulleGraphics.h>
 
 #ifdef MULLE_CG_BACKEND_OPENGL

@@ -19,8 +19,9 @@ OS      | Windows | Drawing      | State
 android | ???     | nanovg       | Planned
 darwin  | GLFW    | nanovg.metal | Experimental
 ios     | ???     | nanovg.metal | Planned
-linux   | GLFW    | nanovg       | Works
-windows | GLFW    | nanovg.d311  | Planned
+linux   | GLFW    | nanovg.gl3   | Works
+windows | GLFW    | nanovg.gl3   | Works
+windows | SDL2    | nanovg.d3d11 | Planned
 
 
 The project itself is relatively bare, except for glue code. For instance

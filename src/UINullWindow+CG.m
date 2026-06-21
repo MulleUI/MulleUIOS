@@ -19,17 +19,17 @@
 static struct
 {
    Class   contextClass;
-} Self;
+} ClassStatic;
 
 
 + (void) setOSGraphicsContextClass:(Class) cls
 {
-   Self.contextClass = cls;
+   ClassStatic.contextClass = cls;
 }
 
 + (Class) osGraphicsContextClass
 {
-   return( Self.contextClass ? Self.contextClass : [CGContext class]);
+   return( ClassStatic.contextClass ? ClassStatic.contextClass : [CGContext class]);
 }
 
 @end

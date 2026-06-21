@@ -14,11 +14,9 @@ set( SOURCES
 src/CAOpenGLLayer.m
 src/MulleUIOS.m
 src/UINullWindow+CG.m
-src/UINullWindow+GLFW.m
-src/UINullWindow+SDL.m
+src/UINullWindow+MulleUIOS.m
 src/UIWindow+CG.m
-src/UIWindow+GLFW.m
-src/UIWindow+SDL.m
+src/UIWindow+MulleUIOS.m
 )
 
 #

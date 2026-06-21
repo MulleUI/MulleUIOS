@@ -11,8 +11,6 @@
 # Requires: mulle-sde, wine (for windows platform tests)
 #
 
-set -e
-
 CONFIGS="${1:-all}"
 PASS=0
 FAIL=0
@@ -38,37 +36,48 @@ run_config()
    echo ""
    echo "=== Config: $config (platforms: $platforms) ==="
 
-   mulle-sde config switch "${config}" || { fail "${config}: config switch failed"; return; }
+   mulle-sde config switch "${config}" || true
 
-   # also set config for MulleUIOS in the test subproject
-   ( cd test && mulle-sde env set MULLE_SOURCETREE_CONFIG_NAME_MULLE_UIOS "${config}" ) \
-      || { fail "${config}: failed to set test subproject config"; return; }
+   # tell the test subproject which MulleUIOS config to use, then re-fetch
+   # so the stash reflection is updated
+   ( cd test && mulle-sde env set MULLE_SOURCETREE_CONFIG_NAME_MULLE_UIOS "${config}" \
+             && mulle-sde fetch > /dev/null 2>&1 ) || true
+   mulle-sde test clean all > /dev/null 2>&1 || true
+
+   # verify config actually switched
+   local actual
+   actual="$(mulle-sde config switch -p 2>/dev/null)"
+   if [ "${actual}" != "${config}" ]; then
+      fail "${config}: config switch failed (got '${actual}')"
+      return
+   fi
 
    # verify sourcetree has expected deps by reading the config file
    local configfile=".mulle/etc/sourcetree/${config}"
    case "${config}" in
       glfw)
-         grep -q "MulleGLFW"    "${configfile}" || { fail "${config}: MulleGLFW missing from config";    return; }
-         grep -q "MulleCGNanoVG" "${configfile}" || { fail "${config}: MulleCGNanoVG missing from config"; return; }
-         grep -q "MulleSDL"     "${configfile}" && { fail "${config}: MulleSDL should not be in config"; return; }
+         grep -q "MulleGLFW"      "${configfile}" || { fail "${config}: MulleGLFW missing from config";       return; }
+         grep -q "MulleCGNanovgGL" "${configfile}" || { fail "${config}: MulleCGNanovgGL missing from config"; return; }
+         grep -q "MulleSDL"       "${configfile}" && { fail "${config}: MulleSDL should not be in config";    return; }
          pass "${config}: sourcetree correct"
       ;;
       sdl)
-         grep -q "MulleSDL"     "${configfile}" || { fail "${config}: MulleSDL missing from config";     return; }
-         grep -q "MulleCGNanoVG" "${configfile}" || { fail "${config}: MulleCGNanoVG missing from config"; return; }
-         grep -q "MulleGLFW"    "${configfile}" && { fail "${config}: MulleGLFW should not be in config"; return; }
+         grep -q "MulleSDL"       "${configfile}" || { fail "${config}: MulleSDL missing from config";        return; }
+         grep -q "MulleCGNanovgGL" "${configfile}" || { fail "${config}: MulleCGNanovgGL missing from config"; return; }
+         grep -q "MulleGLFW"      "${configfile}" && { fail "${config}: MulleGLFW should not be in config";   return; }
          pass "${config}: sourcetree correct"
       ;;
       sdl-d3d11)
-         grep -q "MulleSDL"     "${configfile}" || { fail "${config}: MulleSDL missing from config";     return; }
-         grep -q "MulleCGNanoVG" "${configfile}" || { fail "${config}: MulleCGNanoVG missing from config"; return; }
-         grep -q "MulleCGNanoVG-craftinfo" "${configfile}" || { fail "${config}: craftinfo missing from config"; return; }
-         [ -f "craftinfo/MulleCGNanoVG-craftinfo.d3d11/definition/set/MULLE_CG_BACKEND" ] \
-            && grep -q "D3D11" "craftinfo/MulleCGNanoVG-craftinfo.d3d11/definition/set/MULLE_CG_BACKEND" \
+         grep -q "MulleSDL"       "${configfile}" || { fail "${config}: MulleSDL missing from config";        return; }
+         grep -q "MulleCGNanovg"  "${configfile}" || { fail "${config}: MulleCGNanovg missing from config";   return; }
+         grep -q "MulleCGNanovgGL" "${configfile}" && { fail "${config}: MulleCGNanovgGL should not be in sdl-d3d11"; return; }
+         grep -q "MulleCGNanovg-craftinfo" "${configfile}" || { fail "${config}: craftinfo missing from config"; return; }
+         [ -f "craftinfo/MulleCGNanovg-craftinfo.d3d11/definition/set/MULLE_CG_BACKEND" ] \
+            && grep -q "D3D11" "craftinfo/MulleCGNanovg-craftinfo.d3d11/definition/set/MULLE_CG_BACKEND" \
             || { fail "${config}: MULLE_CG_BACKEND definition file missing or wrong"; return; }
          pass "${config}: sourcetree correct (craftinfo present, MULLE_CG_BACKEND=D3D11)"
          # compile check only — no Wine D3D11 runtime
-         mulle-sde test craft > /tmp/test-${config}-linux.log 2>&1 \
+         mulle-sde test --platform linux craft > /tmp/test-${config}-linux.log 2>&1 \
             && pass "${config}: linux compile OK" \
             || { fail "${config}: linux compile FAILED (see /tmp/test-${config}-linux.log)"; return; }
          return 0
@@ -100,7 +109,7 @@ check_error_config()
       fail "config: expected error message not found"
    fi
    # switch back to glfw so subsequent steps work
-   mulle-sde config switch glfw > /dev/null 2>&1
+   mulle-sde config switch glfw > /dev/null 2>&1 || true
 }
 
 # Save current config to restore at end
@@ -132,6 +141,7 @@ esac
 echo ""
 echo "=== Restoring config: ${ORIGINAL_CONFIG} ==="
 mulle-sde config switch "${ORIGINAL_CONFIG}" > /dev/null 2>&1 || true
+( cd test && mulle-sde env set MULLE_SOURCETREE_CONFIG_NAME_MULLE_UIOS "${ORIGINAL_CONFIG}" ) > /dev/null 2>&1 || true
 
 echo ""
 echo "=== Results: ${PASS} passed, ${FAIL} failed ==="

@@ -51,8 +51,14 @@
 @interface UIWindow( OSWindowClass) <UIEventReceiver>
 
 + (void) setOSWindowClass:(Class) cls;
-+ (void) setOSGraphicsContextClass:(Class) cls;
 + (Class) osWindowClass;
+
+@end
+
+
+@interface UIWindow( OSGraphicsContextClass)
+
++ (void) setOSGraphicsContextClass:(Class) cls;
 + (Class) osGraphicsContextClass;
 
 @end

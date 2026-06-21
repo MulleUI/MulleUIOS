@@ -1,0 +1,12 @@
+#
+#
+#
+export MULLE_SOURCETREE_CONFIG_NAME="glfw"
+
+
+#
+#
+#
+export MULLE_SOURCETREE_CONFIG_NAME_MULLE_GLFW="x11"
+
+
