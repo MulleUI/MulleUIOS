@@ -6,6 +6,13 @@
 
 #import "import-private.h"
 
+#ifndef HAVE_IMPORT__MULLE_GLFW
+int  main( int argc, char *argv[])
+{
+   return( 0);
+}
+#else
+
 // nanovg.h is needed for the raw nvg* API. NVGcolor is already defined
 // by CGColor.h (as CG_COLOR_STRUCT_NAME), so skip its redefinition.
 #define NVGcolor_defined__
@@ -21,7 +28,6 @@
 # include <GL/gl.h>
 #endif
 
-#include <MulleImage/stb_image_write.h>
 
 //
 // DemoData (from demo.h)
@@ -1357,14 +1363,14 @@ int   main( int argc, char *argv[])
          }
       }
 
-      hints = GLFW_DEFAULT_CONTEXT;
+      hints = GLFWGraphicsHintsDefault;
       switch( [MyWindow defaultBackend])
       {
-      case CG_GL3     : hints = GLFW_GL3_CONTEXT; break;
-      case CG_GL3_2   : hints = GLFW_GL3_2_CONTEXT; break;
-      case CG_GLES2   : hints = GLFW_GLES2_CONTEXT; break;
-      case CG_GLES3   : hints = GLFW_GLES3_CONTEXT; break;
-      case CG_GLES3_2 : hints = GLFW_GLES3_2_CONTEXT; break;
+      case CG_GL3     : hints = GLFWGraphicsHintsGL3; break;
+      case CG_GL3_2   : hints = GLFWGraphicsHintsGL3_2; break;
+      case CG_GLES2   : hints = GLFWGraphicsHintsGLES2; break;
+      case CG_GLES3   : hints = GLFWGraphicsHintsGLES3; break;
+      case CG_GLES3_2 : hints = GLFWGraphicsHintsGLES3_2; break;
       }
 
       window = [[[MyWindow alloc] initWithFrame:CGRectMake( 0, 0, 1000, 600)
@@ -1388,3 +1394,5 @@ int   main( int argc, char *argv[])
    }
    return( [app runApp]);
 }
+
+#endif /* HAVE_IMPORT__MULLE_GLFW */

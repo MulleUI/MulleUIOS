@@ -125,6 +125,25 @@ styleMask = (UIWindowStyleMaskDefault & ~UIWindowStyleAntiAlias)
           | UIWindowStyleForceEdgeAntiAlias;
 ```
 
+
+### Build with Debug Mesa OpenGL (Linux)
+
+Use [https://gist.github.com/mulle-nat/344cc74f2e9f36a47e50f7194290b884]()
+to build a debug OpenGL Mesa library with drivers.
+
+Then set:
+
+``` bash
+mulle-sde env --this-user-host set CMAKE_PREFIX_PATH '/opt/mesa/debug/26.2.0-devel/:${CMAKE_PREFIX_PATH}'
+mulle-sde env --this-user-host set LD_LIBRARY_PATH '/opt/mesa/debug/26.2.0-devel/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}'
+```
+
+The `CMAKE_PREFIX_PATH` environrment will use the custom debug Mesa libraries
+for use with cmake.
+The `LD_LIBRARY_PATH` will ensure the debug drivers are found during runtime.
+
+
+
 ### You are here
 
 ![Overview](overview.dot.svg)

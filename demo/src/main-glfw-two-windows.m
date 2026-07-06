@@ -1,6 +1,13 @@
 #define _GNU_SOURCE
 
 #import "import-private.h"
+
+#ifndef HAVE_IMPORT__MULLE_GLFW
+int  main( int argc, char *argv[])
+{
+   return( 0);
+}
+#else
 //
 // This is a step towards threaded drawing. This demo by itself just shows
 // how two single-threaded windows can run with different frameRates.
@@ -121,14 +128,14 @@ static MyWindow   *create_window( unsigned int i,
    GLFWGraphicsHints   hints;
    CGContext           *context;
 
-   hints = GLFW_DEFAULT_CONTEXT;
+   hints = GLFWGraphicsHintsDefault;
    switch( [MyWindow defaultBackend])
    {
-   case CG_GL3     : hints = GLFW_GL3_CONTEXT; break;
-   case CG_GL3_2   : hints = GLFW_GL3_2_CONTEXT; break;
-   case CG_GLES2   : hints = GLFW_GLES2_CONTEXT; break;
-   case CG_GLES3   : hints = GLFW_GLES3_CONTEXT; break;
-   case CG_GLES3_2 : hints = GLFW_GLES3_2_CONTEXT; break;
+   case CG_GL3     : hints = GLFWGraphicsHintsGL3; break;
+   case CG_GL3_2   : hints = GLFWGraphicsHintsGL3_2; break;
+   case CG_GLES2   : hints = GLFWGraphicsHintsGLES2; break;
+   case CG_GLES3   : hints = GLFWGraphicsHintsGLES3; break;
+   case CG_GLES3_2 : hints = GLFWGraphicsHintsGLES3_2; break;
    }
 
    window = [[[MyWindow alloc] initWithFrame:CGRectMake( 200 + 200 * i, 200, 200, 200)
@@ -214,3 +221,5 @@ int   main( int argc, char *argv[])
 //                     ╙▀W╥,╓╣   ╙█║        ╫M  █    ,╓▄╝╙`
 //                          ╙╙▀%▄▄▄▌,≤▄_▄≡,▐▓▓▄▄#ª▀"`
 
+
+#endif /* HAVE_IMPORT__MULLE_GLFW */

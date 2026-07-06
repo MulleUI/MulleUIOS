@@ -35,15 +35,15 @@ Bochum
 
 === Middle Alignment ===
 # Font metrics bounds:
-text:"VfL" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 54.56 [1 rows]
+text:"VfL" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 56 [1 rows]
 text:"VfL
 Bochum
-1848" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 38.56 [3 rows]
+1848" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 56 [3 rows]
 # Visual bounds:
 text:"VfL" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 56 [1 rows]
 text:"VfL
 Bochum
-1848" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 40 [3 rows]
+1848" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 56 [3 rows]
 
 === Fill Alignment (Special) ===
 text:"VfL" align:UITextAlignmentFill visual:NO rect:0 0 200 100 -> origin:100 12.56 [1 rows]
@@ -52,6 +52,6 @@ text:"VfL" align:UITextAlignmentFill visual:NO rect:0 0 200 100 -> origin:100 12
 text:"VfL
 Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 400 200 -> origin:200 92 [2 rows]
 text:"VfL
-Bochum" align:UITextAlignmentMiddle visual:NO rect:0 0 400 200 -> origin:200 96.56 [2 rows]
-text:"1848" align:UITextAlignmentBaseline visual:NO rect:10 20 100 60 -> origin:70 50 [1 rows]
-text:"1848" align:UITextAlignmentTop visual:YES rect:10 20 100 60 -> origin:70 32 [1 rows]
+Bochum" align:UITextAlignmentMiddle visual:NO rect:0 0 400 200 -> origin:200 106 [2 rows]
+text:"1848" align:UITextAlignmentBaseline visual:NO rect:10 20 100 60 -> origin:60 50 [1 rows]
+text:"1848" align:UITextAlignmentTop visual:YES rect:10 20 100 60 -> origin:60 32 [1 rows]

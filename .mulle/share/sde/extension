@@ -4,11 +4,12 @@ mulle-c/c;runtime
 mulle-sde/c;runtime
 mulle-sde/sde;extra
 mulle-sde/mulle-c-styleguide;extra
-mulle-objc/mulle-objc-styleguide;extra
+mulle-c/styleguide;extra
 mulle-objc/objc-cmake;buildtool
 mulle-c/c-cmake;buildtool
 mulle-sde/c-cmake;buildtool
 mulle-sde/cmake;buildtool
 mulle-objc/objc-demo;extra
+mulle-objc/mulle-objc-styleguide;extra
 mulle-sde/idea;extra
 mulle-sde/sublime-text;extra

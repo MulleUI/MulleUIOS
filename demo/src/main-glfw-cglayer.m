@@ -1,6 +1,13 @@
 #define _GNU_SOURCE
 
 #import "import-private.h"
+
+#ifndef HAVE_IMPORT__MULLE_GLFW
+int  main( int argc, char *argv[])
+{
+   return( 0);
+}
+#else
 #ifdef __APPLE__
 # include <OpenGL/gl.h>
 #else
@@ -75,7 +82,7 @@ int   main( int argc, char *argv[])
       window = [GLFWOSWindow windowWithFrame:CGRectMake( 0, 0, 200, 200)
                            titleUTF8String:"Demo"
                                  styleMask:UIWindowStyleHidden
-                           graphicsHints:GLFW_DEFAULT_CONTEXT];
+                           graphicsHints:GLFWGraphicsHintsDefault];
 
       // need to explicitly activate the "OS" context, it will be locked and
       // only available to this thread during activation
@@ -165,3 +172,4 @@ int   main( int argc, char *argv[])
 // it isn't really, it's an implicit
 // relationship. There is no OpenGL context pointer in CGContext, as this is
 // a thread local variable most likely
+#endif /* HAVE_IMPORT__MULLE_GLFW */

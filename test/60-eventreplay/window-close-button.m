@@ -20,9 +20,9 @@ int   main( void)
    [app addWindow:window];
 
    player = [UIEventPlayer instance];
-   if( ! [player loadScriptFromUTF8String:"2.0 closeButton\n"])
+   if( ! [player loadScriptWithUTF8String:"2.0 closeButton\n"])
    {
-      mulle_fprintf( stderr, "loadScriptFromUTF8String: failed\n");
+      mulle_fprintf( stderr, "loadScriptWithUTF8String: failed\n");
       return( 1);
    }
    [app setEventPlayer:player];
