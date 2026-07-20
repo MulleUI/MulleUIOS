@@ -467,13 +467,13 @@ export MULLE_CG_NANOVG_BRANCH="prerelease"
 
 
 #
-# mulle-freetype nodetype: ${MULLE__FREETYPE_NODETYPE:-git}
+# mulle-freetype nodetype: ${MULLE__FREETYPE_NODETYPE:-tar}
 #
 export MULLE__FREETYPE_NODETYPE="git"
 
 
 #
-# mulle-freetype url: ${MULLE__FREETYPE_URL:-https://github.com/MulleUI/mulle-freetype.git}
+# mulle-freetype url: ${MULLE__FREETYPE_URL:-https://github.com/MulleUI/mulle-freetype/archive/${MULLE_TAG}.tar.gz}
 #
 export MULLE__FREETYPE_URL="https://github.com/MulleUI/mulle-freetype.git"
 
@@ -515,15 +515,9 @@ export MULLE__NANOVG_URL="https://github.com/MulleUI/mulle-nanovg.git"
 
 
 #
-# mulle-objc-list nodetype: ${MULLE_OBJC_LIST_NODETYPE:-tar}
+# mulle-nanovg branch: ${MULLE__NANOVG_BRANCH}
 #
-export MULLE_OBJC_LIST_NODETYPE="git"
-
-
-#
-# mulle-objc-list url: ${MULLE_OBJC_LIST_URL:-https://github.com/mulle-objc/mulle-objc-list/archive/${MULLE_TAG}.tar.gz}
-#
-export MULLE_OBJC_LIST_URL="https://github.com/mulle-objc/mulle-objc-list.git"
+export MULLE__NANOVG_BRANCH="prerelease"
 
 
 #
