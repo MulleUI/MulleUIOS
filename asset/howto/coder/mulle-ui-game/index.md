@@ -12,6 +12,23 @@ handling and collision detection.
   "timer-driven" — there is no NSTimer involved).
 - The project template `mulle-ui/game-developer` provides the skeleton. Use
   `mulle-sde init -m mulle-ui/game-developer` to start a new game project.
+- Use this bundle in order: `drawing-api.md` → `patterns.md` → `quirks.md` →
+  `faq.md` (last resort).
+
+## Local references
+
+- `src/CAOpenGLLayer.h` — OpenGL layer lifecycle
+- `demo/src/main-glfw-cglayer.m` — CGFramebuffer write to BMP
+- `demo/src/main-glfw-draw-simple.m` — raw GLFWOSWindow + CGContext
+- `demo/src/main-glfw-draw-offscreen.m` — offscreen render-to-texture
+- `demo/src/main-glfw-two-windows.m` — multi-window frame rate demo
+- `demo/src/main-arc-nanovg.m` — arc/curve drawing demo
+- `demo/src/main-line-nanovg.m` — pixel-center line rendering
+- `demo/src/main-cg-demo.m` — kitchen-sink NanoVG demo port
+- `demo/src/main-image-desaturate.m` — image manipulation
+- `test/10-first/noleak-cgcontext.m` — graphics context lifetime
+- `test/10-first/nullwindow-cgcontext.m` — headless context activation
+- `test/20-paint/catextlayer-render.m` — CATextLayer rendering with dummy OS context
 
 ## Understand first
 
@@ -19,6 +36,7 @@ handling and collision detection.
 mulle-sde api cat MulleCG
 mulle-sde api cat MulleUIView
 mulle-sde api cat MulleUIWindow
+mulle-sde api cat CAOpenGLLayer
 mulle-sde api apropos quadtree
 mulle-sde api apropos hitTest
 mulle-sde code search UIApplicationRunDrawCallbackHz
@@ -33,6 +51,8 @@ Prefer `CGGraphicsLayer` + `UIView` over a raw draw callback:
 | Concern | Use | Why |
 | --- | --- | --- |
 | Drawing | `CGGraphicsLayer` subclass with `drawInContext:` | Composable, testable, can be headless-verified |
+| Drawing (raw OpenGL) | `CAOpenGLLayer` with `drawOpenGLInContext:` | Direct GL calls in a layer, viewport/scissor managed |
+| Offscreen | `CGFramebuffer` via `setRendersOffScreen:` | GPU-side render-to-texture, then composite |
 | Input | `UIView` with `mouseDown:`/`mouseUp:`/`mouseDragged:`/`keyDown:` | Responder chain, hit testing, tracking areas |
 | Collision | `UITrackingArea` + `getTrackingAreasIntersectingRect:areas:maxAreas:` | Quadtree-backed, efficient rect-vs-rect queries |
 | Animation | `CAAnimation` on `CGGraphicsLayer` properties | Interpolation, timing, auto-lifts framerate |
@@ -316,6 +336,52 @@ For the full story on input beyond what's shown here, see:
 - `mulle-sde howto cat mulle-ui-tracking/coder` — hover detection, mouseEntered/Exited, tracking area quadtree (also used for collision above)
 - `mulle-sde howto cat mulle-ui-hit-testing/coder` — which view receives a click, z-order, excluded views
 - `mulle-sde howto cat mulle-ui-event-replay/coder` — scripted replay for automated game testing with UINullWindow
+
+## CAOpenGLLayer (raw OpenGL inside a layer)
+
+For games that need direct OpenGL calls (custom shaders, 3D elements, compute
+effects), use `CAOpenGLLayer` instead of the draw callback:
+
+```objc
+@interface GLLayer : CAOpenGLLayer
+@end
+
+@implementation GLLayer
+
+- (void) drawOpenGLInContext:(CGContext *) context
+{
+   // OpenGL calls here — viewport and scissor already set
+   glClearColor( 0.1, 0.1, 0.2, 1.0);
+   glClear( GL_COLOR_BUFFER_BIT);
+   // ... your GL drawing ...
+}
+
+@end
+```
+
+The lifecycle is: `beginOpenGLWithContext:` sets viewport/scissor →
+`drawOpenGLInContext:` → `endOpenGLWithContext:` flushes. NanoVG rendering is
+suspended during the OpenGL block via `suspendRender`/`resumeRender`.
+
+See `src/CAOpenGLLayer.h` and `demo/src/main-glfw-cglayer.m` for a working
+example that renders a stroked circle with NanoVG and reads back pixel data
+to a BMP file.
+
+## Backend selection
+
+The default rendering backend is `UIGraphicsBackendDefault` (GL3). To override:
+
+```objc
++ (UIGraphicsBackend) defaultBackend  // override on your GLFWOSWindow subclass
+{
+   return( UIGraphicsBackendGLES2);   // force GLES2
+}
+```
+
+This must be set before the window and context are created. The `osGraphicsHints`
+method on `UIWindow` maps the backend to the corresponding GLFW/SDL context
+hints automatically. Demos like `demo/src/main-glfw-two-windows.m` show the
+pattern: switch on the backend to select the correct hints constant.
 
 ## Verify
 

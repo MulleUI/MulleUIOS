@@ -43,6 +43,17 @@ redraws every frame. You do not need `setNeedsDisplay`. See `quirks.md`.
 It does not exist. `CGColor` is a struct (four floats, by value). See
 `quirks.md` → "CGColor is a struct, not a pointer".
 
+## "How do I render text from a custom .ttf file?"
+
+Load it with `CGContextCreateFont`, then use it by face name:
+
+```objc
+CGContextCreateFont( context, "myfont", "path/to/MyFont.ttf");
+CGContextFontFace( context, "myfont");
+CGContextFontSize( context, 24);
+CGContextText( context, point, "Hello", (size_t) -1);
+```
+
 ## "MulleAudio: how do I just play a sound without pitch-shifting?"
 
 ```objc

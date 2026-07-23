@@ -127,6 +127,62 @@ hundreds of tracking areas efficiently. For thousands of rapidly moving objects
 The tracking area quadtree is optimized for spatial queries on semi-static
 geometry, not mass physics simulation.
 
+## CAOpenGLLayer: viewport is flipped for OpenGL
+
+`CAOpenGLLayer` automatically flips the Y axis in `drawInContext:` to convert
+from top-left screen coordinates to OpenGL bottom-left coordinates. The
+`_viewPort` and `_scissor` rects are set using `CGRectIntegral` after flipping.
+Do not apply your own Y-flip inside `drawOpenGLInContext:`.
+
+## CAOpenGLLayer: requires OpenGL backend at compile time
+
+`CAOpenGLLayer` is only compiled when `MULLE_CG_BACKEND_OPENGL` is defined.
+If the runtime backend does not support OpenGL, `drawOpenGLInContext:` is
+skipped and `drawNonOpenGLInContext:` draws a fallback message instead. Check
+`UIGraphicsBackendSupportsOpenGL( [context backend])` if you need runtime
+detection.
+
+## CAOpenGLLayer: always draws background with alpha
+
+`drawsBackgroundWithAlpha:` always returns `YES`. The background is always
+drawn (even as clear color), because textured elements do not show up
+otherwise — the stencil buffer requires a non-zero color buffer. Do not
+override this to return `NO`.
+
+## CAOpenGLLayer: no GLES2 VAOs
+
+On GLES2 (`MULLE_CG_GLVERSION == MULLE_CG_GLES2`), VAO objects are not
+created — `glBindVertexArray` is skipped. Vertex data is bound directly via
+`glBindBuffer` + `glVertexAttribPointer`.
+
+## Raw GLFWOSWindow + CGContext requires manual activation
+
+When using the low-level path (no UIWindow), you must manually activate and
+deactivate the graphics context around creation and finalization:
+
+```objc
+[window os_activateGraphicsContext];
+context = [[[CGContext alloc] initWithOSGraphicsContext:window
+                                                shareID:[window shareID]
+                                                options:UIGraphicsDefaultOptions] autorelease];
+[window os_deactivateGraphicsContext];
+// ... later in -finalize ...
+[window os_activateGraphicsContext];
+[_context mullePerformFinalize];
+[window os_deactivateGraphicsContext];
+```
+
+Failing to call `os_activateGraphicsContext`/`os_deactivateGraphicsContext`
+around context creation will cause a crash or undefined behavior. See
+`demo/src/main-glfw-draw-simple.m` for the full pattern.
+
+## Offscreen rendering requires setRendersOffScreen: before beginRender:
+
+To render to an offscreen framebuffer, call `[context setRendersOffScreen:YES]`
+BEFORE `[context beginRender:]`. After `endRender`, suspend the context and
+call `_endRender` to retrieve the `CGFramebuffer`. See
+`demo/src/main-glfw-draw-offscreen.m`.
+
 ## CGColor is a struct, not a pointer
 
 `CGColor` is `struct NVGcolor` — four floats (r, g, b, a) passed by value.

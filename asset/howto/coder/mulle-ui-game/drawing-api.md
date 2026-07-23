@@ -26,6 +26,9 @@ All take a `CGContext *context` as first arg.
 
 ```objc
 CGContextFillWithColor( ctx, color);                                    // fill entire canvas
+CGContextClearFramebuffer( ctx);                                        // clear with bg color
+CGContextClearFramebufferWithColor( ctx, color);                        // clear with specific
+CGContextClearFramebufferWithHexColor( ctx, 0x4D4D51FF);               // clear with hex RGBA
 CGContextFillRectWithColor( ctx, rect, color);
 CGContextFillRoundedRectWithColor( ctx, rect, cornerRadius, color);
 CGContextFillCircleWithColor( ctx, circle, color);                      // CACircle
@@ -201,10 +204,21 @@ CGContextFontSize( ctx, 24.0);
 CGContextTextColor( ctx, color);
 CGContextTextAlignment( ctx, UITextAlignmentCenter);
 CGContextFontBlur( ctx, 1.0);           // shadow/glow effect
+CGContextShapeAntiAlias( ctx, YES);     // per-shape AA toggle
+
+// custom font loading (TTF files)
+int fid = CGContextCreateFont( ctx, "icons", "entypo.ttf");
+CGContextAddFallbackFontId( ctx, normalFont, emojiFont);
+CGContextDeleteFont( ctx, fid);
 
 // measurement
 CGTextMetrics m = CGContextTextMetrics( ctx);  // ascender, descender, lineHeight
 CGRect bounds = CGContextTextVisualBounds( ctx, point, str, len);
+CGRect boxBounds = CGContextTextBoxBounds( ctx, point, str, len, maxWidth);
+
+// advanced text layout
+int nrows = CGContextTextBreakLines( ctx, start, remaining, width, rows, 3);
+int nglyphs = CGContextTextGlyphPositions( ctx, point, str, len, glyphs, 100);
 ```
 
 ## Scissoring (clip region)

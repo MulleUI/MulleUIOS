@@ -1,3 +1,5 @@
+#define MULLE_UIOS_VERSION  ((0 << 20) | (0 << 8) | 1)
+
 //
 //  MulleUIOS.m
 //  MulleUIOS

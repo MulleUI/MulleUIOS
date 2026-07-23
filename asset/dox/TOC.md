@@ -1,238 +1,190 @@
 # MulleUIOS Library Documentation for AI
-<!-- Keywords: platform, binding, windowing, graphics, GLFW, SDL, integration -->
-
+<!-- Keywords: platform, windowing, graphics, GLFW, SDL, OpenGL, headless -->
 ## 1. Introduction & Purpose
 
-MulleUIOS is the platform integration layer that binds the UI framework to the underlying operating system's window system and graphics rendering stack. It acts as the glue between abstract UI concepts (UIWindow, UIView) and concrete platform implementations (GLFW/SDL for windowing, NanoVG/Metal/D3D for rendering). The library enables headless testing through `UINullWindow` and `UINullOSWindow`, allowing the display loop to run without requiring actual OS windows or OpenGL contexts. This is a thin integration layer with minimal code, primarily consisting of Objective-C categories that wire together MulleUIWindow, MulleGraphics, and MulleGLFW (or SDL alternatives).
+MulleUIOS is the platform integration layer that wires the MulleUICore UIWindow/CALayer hierarchy to the underlying OS window system and graphics rendering stack. It acts as the glue between abstract UI concepts (UIWindow, UIView) and concrete platform implementations (GLFW/SDL for windowing, CGContext/NanoVG for rendering). The library is thin by design—it is composed of Objective-C categories that configure backend classes at class-load time, and a single `CAOpenGLLayer` class for embedding raw OpenGL drawing within the layer tree.
 
 **Key features:**
-- Platform-specific window system integration (GLFW, SDL)
-- Graphics context and drawing library binding (NanoVG with Metal/OpenGL/D3D backends)
-- Headless/offscreen rendering support for testing and vibecoding
-- Bridges CALayer from MulleGraphics to UILayer protocol
-- Shadow layer support via CAShadowLayer integration
-- Color and paint abstraction helpers
+- Platform-specific window system integration via GLFW or SDL (selectable at build time)
+- Graphics context binding via MulleCGNanovg with multiple backends (OpenGL GL3/GLES2/GLES3, Direct3D 11)
+- Headless/offscreen rendering support through `UINullWindow` and `UINullOSWindow`
+- `CAOpenGLLayer` for embedding raw OpenGL drawing within the UIView/CALayer hierarchy
+- Build-time config switching: `mulle-sde config switch glfw,sdl,sdl-d3d11`
+- Central per-thread layout context via `CGLayoutContext` (provided by MulleUICore)
 
 ## 2. Key Concepts & Design Philosophy
 
 ### Category-Based Architecture
-MulleUIOS uses Objective-C categories to extend existing classes from dependencies without modifying their source. Categories are conditionally compiled based on available backends (GLFW vs SDL, CG vs other graphics).
+
+MulleUIOS uses Objective-C categories to extend classes from dependencies without modifying their source. Categories are conditionally compiled based on which backends are available (`#ifdef HAVE_IMPORT__MULLE_GLFW`, `#ifdef HAVE_IMPORT__MULLE_CG`, etc.).
+
+### Consolidated Backend Implementation
+
+Rather than scattered per-backend files, all backend wiring lives in a small set of consolidation files:
+
+- **`UIWindow+MulleUIOS.m`** — `UIWindow( OSWindowClass)` handles both GLFW and SDL via `#ifdef` guards. It selects the OS window class, conforms `UIWindow` to `<UIEventReceiver>`, and provides `+osGraphicsHints` mapped from the active NanoVG backend.
+
+- **`UINullWindow+MulleUIOS.m`** — `UINullWindow( OSWindowMulleUIOS)` unconditionally defaults to `[UINullOSWindow class]` for headless use. No `#ifdef` gating required.
+
+- **`UIWindow+CG.m`** — `UIWindow( OSGraphicsContextClass)` defaults to `[CGContext class]` for the graphics context. Guarded by `#ifdef HAVE_IMPORT__MULLE_CG`.
+
+- **`UINullWindow+CG.m`** — `UINullWindow( OSWindowCG)` mirrors the CG context configuration for null windows. Guarded by `#ifdef HAVE_IMPORT__MULLE_CG`.
 
 ### Backend Selection Pattern
-The library provides class methods `+setOSWindowClass:` and `+setOSGraphicsContextClass:` to allow runtime selection of backend implementations. Default classes are provided for each platform combination, but can be overridden (e.g., using `UINullOSWindow` for headless tests).
 
-### Headless Testing Philosophy
-`UINullWindow` with `UINullOSWindow` enables display loop execution without creating real OS windows or OpenGL contexts. Setting `+osGraphicsContextClass:` to `Nil` prevents CGContext creation, allowing pure logic testing. This supports "vibecoding" - development without graphical dependencies.
+Class methods `+setOSWindowClass:` and `+setOSGraphicsContextClass:` on both `UIWindow` and `UINullWindow` allow runtime backend overrides. Defaults are per-platform but can be changed (e.g., `[UINullOSWindow class]` for headless tests, `Nil` for `osGraphicsContextClass` to skip CGContext creation). **These must be called before any window is created;** changing backends mid-run is not supported.
 
-### Protocol Adaptation
-The library makes classes from MulleGraphics (CGContext, CGImage, CGFramebuffer, CALayer) conform to UI protocols (UIGraphicsContext, UIImage, UIFramebuffer, UILayer) through category declarations, enabling polymorphic usage across the UI stack.
+### Conditional Compilation & Configs
 
-### Conditional Compilation
-Categories are wrapped in `#ifdef HAVE_IMPORT__MULLE_GLFW`, `#ifdef HAVE_IMPORT__MULLE_CG`, etc., ensuring only available backends are compiled. This allows the same codebase to support multiple platform configurations.
+Categories are wrapped in `#ifdef HAVE_IMPORT__MULLE_GLFW` / `#ifdef HAVE_IMPORT__MULLE_SDL` / `#ifdef HAVE_IMPORT__MULLE_CG`. Build-time configs (`glfw`, `sdl`, `sdl-d3d11`) select which dependencies are pulled in, determining which conditional blocks are active. Switch via `mulle-sde config switch <name>`.
 
 ## 3. Core API & Data Structures
 
-### 3.1. `MulleUIOS.h` - Main Public Header
+### 3.1. `MulleUIOS.h` — Main Public Header
 
 #### `@interface UIWindow( OSWindowClass) <UIEventReceiver>`
-**Purpose:** Provides class methods for configuring the OS window and graphics context backend classes used by UIWindow instances.
+
+**Purpose:** Declares `UIWindow` as conforming to `<UIEventReceiver>` and provides class methods for configuring the OS window backend.
 
 **Class Configuration Methods:**
-- `+ (void) setOSWindowClass:(Class) cls` - Override the default OS window class (e.g., GLFWOSWindow, SDLOSWindow, UINullOSWindow)
-- `+ (Class) osWindowClass` - Returns the currently configured OS window class
-- `+ (void) setOSGraphicsContextClass:(Class) cls` - Override the default graphics context class (e.g., CGContext, or Nil for headless)
-- `+ (Class) osGraphicsContextClass` - Returns the currently configured graphics context class
+- `+ (void) setOSWindowClass:(Class) cls` — Override the default OS window class. Call before first window creation.
+- `+ (Class) osWindowClass` — Returns the currently configured OS window class. Defaults to `[GLFWOSWindow class]` (under `#ifdef HAVE_IMPORT__MULLE_GLFW`) or `[SDLOSWindow class]` (under `#ifdef HAVE_IMPORT__MULLE_SDL`), or `ClassStatic.windowClass` (may be `Nil`) if neither backend is compiled in.
 
-**Usage Pattern:** Call the setter methods early in application initialization before creating any windows to control which backend is used.
+**Platform Graphics Hints (implementation-only, in `UIWindow+MulleUIOS.m`, not declared in public header):**
+- `+ (UIOSWindowGraphicsHints) osGraphicsHints` — Returns a `UIOSWindowGraphicsHints` struct with platform-specific GL context settings (version, profile). Derived from `[CGContext nanoVGBackend]` and mapped to GLFW or SDL hint constants. Returns a zeroed struct if neither backend is compiled.
 
-#### `@interface CGContext( UIWindow) <UIGraphicsContext>`
-**Purpose:** Extends CGContext to conform to the UIGraphicsContext protocol, making it usable as a graphics context in the UI framework.
+#### `@interface UIWindow( OSGraphicsContextClass)`
 
-**Image Creation Method:**
-- `- (id <UIImage>) imageWithFramebuffer:(id <UILayer>) framebuffer nameUTF8String:(char *) nameUTF8String` - Creates a CGImage from a CGFramebuffer layer. Must call `[CGContext barrier]` before this to ensure GPU drawing is complete. Used for capturing offscreen-rendered content as images.
+**Purpose:** Provides class configuration for the graphics context class used by the window.
 
-#### `@interface CGImage( UIImage) <UIImage>`
-**Purpose:** Makes CGImage conform to UIImage protocol for use as image objects in the UI framework.
+- `+ (void) setOSGraphicsContextClass:(Class) cls` — Override the default graphics context class. Set to `Nil` for headless/vibecoding mode without CGContext creation.
+- `+ (Class) osGraphicsContextClass` — Returns the configured class or `[CGContext class]`.
 
-#### `@interface CGFramebuffer( UIFramebuffer) <UIFramebuffer>`
-**Purpose:** Makes CGFramebuffer conform to UIFramebuffer protocol for use as framebuffer objects in rendering pipeline.
+### 3.2. `CAOpenGLLayer.h` — OpenGL Layer
 
-#### `@interface CALayer( UIOSWindow) <MulleUINamedObject>`
-**Purpose:** Extends CALayer with initialization that takes an OS window reference.
+#### `@interface CAOpenGLLayer : CGGraphicsLayer`
 
-**Initialization:**
-- `- (instancetype) initWithFrame:(CGRect) frame OSWindow:(id <UIOSWindow>) window` - Initialize a layer with a frame and associated OS window handle
+**Purpose:** A `CGGraphicsLayer` subclass that allows raw OpenGL drawing within the UIView/CALayer hierarchy. It computes viewport and scissor rects (y-flipped for OpenGL), suspends NanoVG rendering, executes OpenGL, then resumes NanoVG. Supports both deprecated (immediate mode) and modern (shader-based) OpenGL.
 
-#### `@interface CGGraphicsLayer( UILayer) <UILayer>`
-**Purpose:** Makes CGGraphicsLayer conform to UILayer protocol, enabling use as the main rendering layer in UIView.
-
-### 3.2. `UIView+CGGraphicsLayerForwarding` Category
-
-**Purpose:** Forwards graphics-related properties from UIView to the underlying CGGraphicsLayer, providing a unified API for view rendering properties.
-
-**Properties (all forwarded to the main layer):**
-- `@property( assign) CGGraphicsLayerDrawCallback_t *drawCallback` - Custom drawing callback function
-- `@property( observable) MulleCornerInsets cornerInsets` - Insets for rounded corners
-- `@property( observable) CGFloat borderWidth` - Width of the border
-- `@property( observable) CGFloat opacity` - Alpha transparency (0.0 to 1.0)
-- `@property( observable) CGPaint *borderPaint` - Paint used for border rendering
-- `@property( observable) CGPaint *backgroundPaint` - Paint used for background fill
-- `@property( observable) CGPoint anchorPoint` - Anchor point for transformations
-- `@property( observable) CARotation rotation` - Layer rotation transform
-- `@property( assign) BOOL masksToBounds` - Whether to clip sublayer rendering to bounds
-
-**Convenience Methods:**
-- `- (void) setBorderColor:(CGColor) color` - Set border color from CGColor value
-- `- (void) setBackgroundColor:(CGColor) color` - Set background color from CGColor value
-- `- (void) setCornerRadius:(CGFloat) radius` - Set uniform corner radius
-
-### 3.3. `UIWindow+CGGraphicsLayer` Category
-
-**Purpose:** Provides direct access to the window's draw callback.
-
-**Property:**
-- `@property( dynamic) CGGraphicsLayerDrawCallback_t *drawCallback` - The window's custom drawing callback
-
-### 3.4. `UIWindow+CGColor.h` - Color Conversion Helpers
-
-#### `@interface UIWindow( CGColor)`
-**Purpose:** Provides color and paint property accessors for UIWindow background, converting between CGColor, hex color, and CGPaint representations.
+**Public Instance Variables:**
+- `CGRect _viewPort` — Computed viewport in screen coordinates (y-flipped, integral). Read via `viewPort` property.
+- `CGRect _scissor` — Computed scissor rect in screen coordinates (y-flipped, integral). Read via `scissor` property.
 
 **Properties:**
-- `@property( assign, dynamic) CGColor backgroundColor` - Get/set window background as CGColor
+- `@property( assign) CAOpenGLLayerViewPortCallback_t *viewPortDidChangeCallback` — Optional C callback invoked when the viewport changes (resize/move). Signature:
 
-**Paint Methods:**
-- `- (CGPaint *) backgroundPaint` - Returns background as a CGPaint object (monochrome colors only)
-- `- (void) setBackgroundPaint:(CGPaint *) paint` - Set background from CGPaint object
+  `typedef void CAOpenGLLayerViewPortCallback_t( CAOpenGLLayer *layer, CGContext *context)`
 
-**Implementation Note:** Uses `_backgroundHexColor` internally for efficient storage, converting to/from CGColor on demand.
+- `@property( readonly) CGRect viewPort` — Readonly accessor for `_viewPort`.
+- `@property( readonly) CGRect scissor` — Readonly accessor for `_scissor`.
 
-### 3.5. `UIView+CAShadowLayer.h` - Shadow Support
+**Lifecycle:**
+- `- (instancetype) initWithFrame:(CGRect) frame` — Sets canvas to `CGRectMake( -1.0, 1.0, 2.0, -2.0)`.
+- `- (void) finalize` — Cleans up OpenGL resources (program, VBO, optionally VAO on non-GLES2).
+- `- (id) copy` — Overrides to delegate to `[super copy]`.
 
-#### `@interface UIView( CAShadowLayer)`
-**Purpose:** Adds optional drop shadow rendering capability to UIView using CAShadowLayer from MulleGraphics.
+**Core Methods:**
+- `- (void) beginOpenGLWithContext:(CGContext *) context` — Sets `glViewport` and `glScissor`. For deprecated GL also configures MODELVIEW/PROJECTION identity matrices. Invokes `viewPortDidChange:` if viewport changed since last frame.
+- `- (void) drawOpenGLInContext:(CGContext *) context` — Default draws a colored triangle using deprecated GL (`glBegin`/`glEnd`) or modern GL (compiled shaders + VAO/VBO). Override this for custom GL drawing.
+- `- (void) endOpenGLWithContext:(CGContext *) context` — Calls `glFlush()` and disables `GL_SCISSOR_TEST`.
+- `- (BOOL) drawsBackgroundWithAlpha:(CGFloat) alpha` — Returns `YES` (always, for proper stencil buffer behavior with texture mapping).
+- `- (BOOL) drawInContext:(CGContext *) context` — Overrides super. Suspends NanoVG (`suspendRender`), runs begin/draw/end OpenGL, resumes NanoVG (`resumeRender`). Falls back to `drawNonOpenGLInContext:` if backend lacks OpenGL support.
+- `- (void) viewPortDidChange:(CGContext *) context` — Invokes `viewPortDidChangeCallback` if set. Called from `beginOpenGLWithContext:`.
 
-**Shadow Control:**
-- `- (void) setShowsShadow:(BOOL) flag` - Enable or disable shadow rendering. Creates CAShadowLayer lazily when enabled.
-- `- (BOOL) isShowingShadow` - Returns YES if shadow is currently enabled
+**Non-OpenGL Fallback:**
+- `- (void) drawNonOpenGLInContext:(CGContext *) context` — Draws a placeholder text ("No compatible GL version available") via CGContext when the backend lacks OpenGL.
 
-**Shadow Layer Access:**
-- `- (CAShadowLayer *) shadowLayer` - Returns the CAShadowLayer instance. Asserts if `isShowingShadow` returns NO.
+**Internals (subclassing awareness):**
+- `- (void) compileDefaultShaders` — Compiles vertex/fragment shaders versioned per `MULLE_CG_GLVERSION` (GL3 `#version 150 core`, GLES2 `#version 100`, GLES3 `#version 300 es`). Called lazily by `drawOpenGLInContext:`.
+- `- (void) setupDefaultVertexData` — Creates VBO (and VAO on non-GLES2) with triangle positions/colors.
 
-**Layout Integration:**
-- `- (void) layoutShadowLayer:(id <UILayer>) layer layoutInfo:(struct UILayoutInfo *) info` - Internal method that handles shadow layer frame calculation with extrusion for shadow insets
+### 3.3. `MulleObjCDeps+MulleUIOS.h` — Runtime Loader
 
-**Usage Pattern:** Call `setShowsShadow:YES`, then configure shadow properties via `shadowLayer`.
+#### `@interface MulleObjCDeps( MulleUIOS)`
 
-### 3.6. Backend Category Implementations
+**Purpose:** Declares mulle-objc runtime dependency chain for proper class initialization order.
 
-#### `UIWindow+GLFW.m` - GLFW Backend Binding
-**Purpose:** Implements `osWindowClass` to return `GLFWOSWindow` by default for GLFW-based platforms.
+- `+ (struct _mulle_objc_dependency *) dependencies` — Returns dependency array from generated `objc-deps.inc`. Users do not typically call this directly. Required by the mulle-objc runtime to ensure classes are loaded in dependency order.
 
-**Methods:**
-- `+ (Class) osWindowClass` - Returns `GLFWOSWindow` class or custom override
-- `+ (NSUInteger) osGraphicsHints` - Maps CGContext's NanoVG backend selection (CG_GL3, CG_GLES2, etc.) to GLFW context hints
+### 3.4. Implementation-Only Categories (No Separate Headers)
 
-#### `UIWindow+SDL.m` - SDL Backend Binding
-**Purpose:** Implements `osWindowClass` to return `SDLOSWindow` by default for SDL-based platforms.
+These categories are implemented in `.m` files. Their method declarations are inherited from the main `MulleUIOS.h` header or from protocol conformance. They provide the actual backend wiring.
 
-**Methods:**
-- `+ (Class) osWindowClass` - Returns `SDLOSWindow` class or custom override
-- `+ (NSUInteger) osGraphicsHints` - Maps CGContext's NanoVG backend to SDL context hints
+#### `UINullWindow( OSWindowMulleUIOS)` — in `UINullWindow+MulleUIOS.m`
 
-#### `UIWindow+CG.m` - CoreGraphics Context Binding
-**Purpose:** Implements `osGraphicsContextClass` to return `CGContext` by default.
+- `+ (void) setOSWindowClass:(Class) cls` — Override the window class for null windows. Default: `[UINullOSWindow class]` (unconditional; no `#ifdef` gating unlike `UIWindow`'s variant).
+- `+ (Class) osWindowClass` — Returns the configured class or `[UINullOSWindow class]`.
 
-**Methods:**
-- `+ (Class) osGraphicsContextClass` - Returns `CGContext` class or custom override (can be Nil for headless)
+#### `UINullWindow( OSWindowCG)` — in `UINullWindow+CG.m`
 
-#### `UINullWindow+GLFW.m`, `UINullWindow+SDL.m` - Headless Window GLFW/SDL Binding
-**Purpose:** Override `osWindowClass` for `UINullWindow` to return `UINullOSWindow` instead of real window classes.
-
-**Methods:**
-- `+ (Class) osWindowClass` - Returns `UINullOSWindow` class or custom override
-
-#### `UINullWindow+CG.m` - Headless Graphics Context Binding
-**Purpose:** Override `osGraphicsContextClass` for `UINullWindow`, allowing `Nil` for truly headless operation.
-
-**Methods:**
-- `+ (Class) osGraphicsContextClass` - Returns `CGContext` class or custom override (often set to Nil for testing)
-
-### 3.7. `MulleObjCLoader+MulleUIOS.h` - Runtime Dependency Loading
-
-#### `@interface MulleObjCLoader( MulleUIOS)`
-**Purpose:** Declares dependencies for the mulle-objc runtime loader, ensuring proper initialization order.
-
-**Methods:**
-- `+ (struct _mulle_objc_dependency *) dependencies` - Returns array of mulle-objc dependencies loaded from `objc-loader.inc`
-
-**Note:** This is primarily for internal runtime use; users don't typically interact with this directly.
+- `+ (void) setOSGraphicsContextClass:(Class) cls` — Override graphics context class for null windows. Set to `Nil` for fully headless operation.
+- `+ (Class) osGraphicsContextClass` — Defaults to `[CGContext class]`.
 
 ## 4. Performance Characteristics
 
 ### Overhead
-- **Near-zero runtime overhead**: Categories add no storage overhead; they only extend method dispatch tables at load time.
-- **Headless mode**: UINullWindow/UINullOSWindow bypass all OS window creation and GPU initialization, providing minimal overhead for logic-only tests.
+
+- **Near-zero runtime overhead:** Categories add no storage overhead; they only extend method dispatch tables at load time.
+- **Graphics context hints:** `osGraphicsHints` is a class method run once during window creation. Its cost is negligible.
 
 ### Memory
-- **No additional allocations**: Categories don't allocate new objects; they extend existing instances.
-- **Shadow layer**: Created lazily only when `setShowsShadow:YES` is called, avoiding overhead when not needed.
+
+- **No additional allocations:** Categories configure classes, they do not allocate objects.
+- **CAOpenGLLayer:** Allocates OpenGL resources (shader program, VAO, VBO) lazily on first `drawOpenGLInContext:` call. Cleanup is done in `finalize`.
 
 ### Threading
-- **Single-threaded UI model**: Like most UI frameworks, all UIWindow and UIView operations should occur on the main thread.
-- **Graphics context**: CGContext and backend contexts are not thread-safe without external synchronization.
+
+- **Single-threaded UI model:** All UIWindow, UIView, and CAOpenGLLayer operations should occur on the main thread.
+- **Graphics context:** CGContext and backend GL contexts are not thread-safe without external synchronization.
 
 ### Graphics Context Creation
-- **Lazy initialization**: Graphics contexts are created on first use, not at window creation time.
-- **Backend selection**: Must be done before first window creation; changing backends mid-run is not supported.
+
+- **Lazy initialization:** Graphics contexts are created on first use, not at window creation.
+- **Backend selection:** Must be done before first window creation.
 
 ## 5. AI Usage Recommendations & Patterns
 
 ### Best Practices
 
-1. **Backend Selection Early**: Always call `[UIWindow setOSWindowClass:]` and `[UIWindow setOSGraphicsContextClass:]` before creating any windows. Once windows exist, changing backends is undefined behavior.
+1. **Backend Selection Early:** Call `[UIWindow setOSWindowClass:]` and `[UIWindow setOSGraphicsContextClass:]` before creating any windows.
 
-2. **Use Factory Methods**: Prefer `[UIWindow windowWithFrame:titleUTF8String:styleMask:]` over `[[UIWindow alloc] init...]` for consistency with MulleObjC style.
-
-3. **Headless Testing Setup**:
+2. **Headless Testing Setup:**
    ```objc
    [UIWindow setOSWindowClass:[UINullOSWindow class]];
    [UIWindow setOSGraphicsContextClass:Nil];
-   // Now create windows for testing
    ```
 
-4. **Shadow Layers**: Always check `isShowingShadow` before accessing `shadowLayer` to avoid assertions.
+3. **Use Factory Methods:** Prefer `[UIWindow windowWithFrame:titleUTF8String:styleMask:]` over manual `initWithOSWindow:` construction. The factory method internally resolves the backend via `+osWindowClass`.
 
-5. **Style Masks**: Use `UIWindowStyleMaskBySetting()` helper to modify style masks instead of bitwise operations:
+4. **Style Masks:** Use `UIWindowStyleMaskBySetting()` for clean flag toggling:
    ```objc
    styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleRetained, NO);
+   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleOffscreen, YES);
    ```
 
-6. **GPU Synchronization**: Always call `[context barrier]` before using `imageWithFramebuffer:nameUTF8String:` to ensure GPU drawing is complete.
+5. **Activate/Deactivate Pairing:** When using `activateWindowGraphicsContext`, always pair with `deactivateGraphicsContext:`.
+
+6. **CAOpenGLLayer:** Override `drawOpenGLInContext:` for custom GL drawing. Call `[super drawInContext:context]` if overriding `drawInContext:`.
+
+7. **Changing Configs:** Switch backend configs at build time with `mulle-sde config switch glfw,sdl,sdl-d3d11`. Each config has its own reflect directory and dependency set.
 
 ### Common Pitfalls
 
-1. **Forgetting Headless Setup**: If tests fail with "Cannot create GLFW window" errors, you forgot to set up UINullOSWindow for headless testing.
+1. **Late Backend Selection:** Calling `setOSWindowClass:` after windows exist is undefined behavior.
 
-2. **Backend Mismatch**: Don't mix SDL and GLFW headers/libraries in the same build. Use conditional compilation or separate build configurations.
+2. **Backend Mismatch:** Do not mix SDL and GLFW in the same build run. Use conditional compilation or separate configs.
 
-3. **Late Backend Selection**: Calling `setOSWindowClass:` after windows are created will not affect existing windows and may cause crashes.
+3. **OpenGL Version Compatibility:** CAOpenGLLayer uses different code paths for deprecated GL vs. modern GL (ES2/ES3/GL3). Ensure your GL version macros match the runtime backend.
 
-4. **Property Observable Side Effects**: Properties marked `observable` trigger KVO notifications. Be aware of reentrancy if observers modify state.
+4. **Set `osGraphicsContextClass` to `Nil` for vibecoding:** If no graphics are needed, set to `Nil`; otherwise `CGContext` defaults may try to create backends that fail in headless environments.
 
-5. **Shadow Layer Lifecycle**: The shadow layer is retained by UIView; calling `setShowsShadow:NO` releases it. Don't keep dangling references.
+5. **UINullWindow has independent backend configuration:** `UINullWindow` has its own `+osWindowClass` (from `UINullWindow+MulleUIOS.m`) and `+osGraphicsContextClass` (from `UINullWindow+CG.m`), separate from `UIWindow`. Configure them independently if using `UINullWindow` directly.
 
-6. **Context Activation**: Some operations require an active graphics context. Use `[window activateWindowGraphicsContext]` and `[window deactivateGraphicsContext:]` pairs.
-
-### Idiomatic Usage
-
-- **Category Pattern**: When extending functionality for a specific platform, follow the naming pattern `ClassName+BackendName.m` (e.g., `UIWindow+GLFW.m`).
-- **Conditional Compilation**: Wrap backend-specific code in `#ifdef HAVE_IMPORT__MULLE_GLFW` to ensure portability.
-- **Protocol Conformance**: Use categories to make classes conform to protocols without modifying their headers.
+6. **Category names have changed:** Old category names like `OSWindowGLFW`, `OSWindowSDL`, and `OSWindowCG` were consolidated into `OSWindowClass`, `OSWindowMulleUIOS`, `OSWindowCG`, and `OSGraphicsContextClass`. Code referencing the old names directly (rare) will not compile.
 
 ## 6. Integration Examples
 
-### Example 1: Basic Window Creation with GLFW Backend
+### Example 1: Basic Window with GLFW (Default Config)
 
 ```objc
 #import <MulleUIOS/MulleUIOS.h>
@@ -241,22 +193,19 @@ int   main( void)
 {
    UIApplication   *app;
    UIWindow        *window;
-   NSUInteger      styleMask;
 
-   // GLFW is default, no explicit backend selection needed
-   app       = [UIApplication sharedInstance];
-   styleMask = UIWindowStyleMaskDefault;
-   window    = [UIWindow windowWithFrame:CGRectMake( 0, 0, 640, 480)
-                          titleUTF8String:"My Application"
-                                styleMask:styleMask];
+   app    = [UIApplication sharedInstance];
+   window = [UIWindow windowWithFrame:CGRectMake( 0, 0, 640, 480)
+                      titleUTF8String:"My Application"
+                            styleMask:UIWindowStyleMaskDefault];
    [app addWindow:window];
-   [app run];  // Enters event loop
+   [app run];
 
    return( 0);
 }
 ```
 
-### Example 2: Headless Window for Testing
+### Example 2: Headless Testing with UINullWindow
 
 ```objc
 #import <MulleUIOS/MulleUIOS.h>
@@ -267,7 +216,6 @@ int   main( void)
    UIWindow        *window;
    NSUInteger      styleMask;
 
-   // Configure headless mode before creating windows
    [UIWindow setOSWindowClass:[UINullOSWindow class]];
    [UIWindow setOSGraphicsContextClass:Nil];
 
@@ -280,27 +228,78 @@ int   main( void)
                       titleUTF8String:NULL
                             styleMask:styleMask];
    [app addWindow:window];
-
-   // Test your logic here without OS window/GPU
-   [window processOneFrame:0.016];  // Simulate frame
-
+   [window processOneFrame:0.016];
    [app terminate];
+
    return( 0);
 }
 ```
 
-### Example 3: View with Custom Drawing and Shadow
+### Example 3: Explicit UINullWindow Construction
 
 ```objc
 #import <MulleUIOS/MulleUIOS.h>
 
-static void   customDraw( CGGraphicsLayer *layer, CGContext *context)
+int   main( void)
 {
-   CGRect   bounds;
+   UIApplication     *app;
+   id <UIWindow>     window;
+   UINullOSWindow    *osWindow;
+   id <UIGraphicsContext>   context;
 
-   bounds = [layer bounds];
-   [context setFillColor:CGColorMake( 0.2, 0.5, 0.8, 1.0)];
-   [context fillRect:bounds];
+   app      = [UIApplication instance];
+   osWindow = [[[UINullOSWindow alloc] initWithFrame:CGRectMake( 0, 0, 64, 64)
+                                      titleUTF8String:NULL
+                                            styleMask:UIWindowStyleMaskDefault] autorelease];
+   window   = (id <UIWindow>) [[[UINullWindow alloc] initWithOSWindow:osWindow
+                                                            styleMask:UIWindowStyleMaskDefault] autorelease];
+   [app addWindow:window];
+   context  = [window renderGraphicsContext];
+   [app terminate];
+
+   return( 0);
+}
+```
+
+### Example 4: Offscreen Rendering
+
+```objc
+#import <MulleUIOS/MulleUIOS.h>
+
+int   main( void)
+{
+   UIApplication   *app;
+   UIWindow        *window;
+   NSUInteger      styleMask;
+
+   app       = [UIApplication instance];
+   styleMask = UIWindowStyleMaskDefault;
+   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleRetained, NO);
+   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleOffscreen, YES);
+
+   window = [UIWindow windowWithFrame:CGRectMake( 0, 0, 256, 256)
+                      titleUTF8String:NULL
+                            styleMask:styleMask];
+   [app addWindow:window];
+   [window processOneFrame:0.016];
+   [app terminate];
+
+   return( 0);
+}
+```
+
+### Example 5: OpenGL Layer in a View
+
+```objc
+#import <MulleUIOS/MulleUIOS.h>
+
+static void   viewPortDidChange( CAOpenGLLayer *layer, CGContext *context)
+{
+   MulleUILog( "Viewport changed to %g,%g %gx%g",
+               [layer viewPort].origin.x,
+               [layer viewPort].origin.y,
+               [layer viewPort].size.width,
+               [layer viewPort].size.height);
 }
 
 int   main( void)
@@ -308,24 +307,17 @@ int   main( void)
    UIApplication   *app;
    UIWindow        *window;
    UIView          *view;
-   CAShadowLayer   *shadow;
+   CAOpenGLLayer   *layer;
 
    app    = [UIApplication sharedInstance];
    window = [UIWindow windowWithFrame:CGRectMake( 0, 0, 640, 480)
-                      titleUTF8String:"Shadow Demo"
+                      titleUTF8String:"OpenGL Demo"
                             styleMask:UIWindowStyleMaskDefault];
 
-   view = [UIView viewWithFrame:CGRectMake( 100, 100, 200, 200)];
-   [view setDrawCallback:customDraw];
-   [view setBackgroundColor:CGColorMake( 1.0, 1.0, 1.0, 1.0)];
-   [view setCornerRadius:10.0];
-
-   // Enable shadow
-   [view setShowsShadow:YES];
-   shadow = [view shadowLayer];
-   [shadow setShadowOffset:CGSizeMake( 5.0, 5.0)];
-   [shadow setShadowBlur:8.0];
-
+   view  = [UIView viewWithFrame:CGRectMake( 50, 50, 300, 300)];
+   layer = [[[CAOpenGLLayer alloc] initWithFrame:[view frame]] autorelease];
+   [layer setViewPortDidChangeCallback:viewPortDidChange];
+   [view setMainLayer:layer];
    [[window contentView] addSubview:view];
    [app addWindow:window];
    [app run];
@@ -334,97 +326,21 @@ int   main( void)
 }
 ```
 
-### Example 4: Offscreen Rendering to Image
-
-```objc
-#import <MulleUIOS/MulleUIOS.h>
-
-int   main( void)
-{
-   UIApplication           *app;
-   UIWindow                *window;
-   id <UIGraphicsContext>  context;
-   id <UILayer>            framebuffer;
-   id <UIImage>            image;
-   NSUInteger              styleMask;
-
-   app       = [UIApplication instance];
-   styleMask = UIWindowStyleMaskDefault;
-   styleMask = UIWindowStyleMaskBySetting( styleMask, UIWindowStyleOffscreen, YES);
-
-   window = [UIWindow windowWithFrame:CGRectMake( 0, 0, 256, 256)
-                      titleUTF8String:NULL
-                            styleMask:styleMask];
-   [app addWindow:window];
-
-   // Render content to offscreen framebuffer
-   [window processOneFrame:0.016];
-
-   // Get the framebuffer and create an image from it
-   context     = [window renderGraphicsContext];
-   framebuffer = [window framebuffer];
-
-   [(CGContext *) context barrier];  // Ensure GPU is done
-   image = [(CGContext *) context imageWithFramebuffer:framebuffer
-                                        nameUTF8String:"offscreen"];
-
-   // Now 'image' contains the rendered content
-   // ... save or process image ...
-
-   [app terminate];
-   return( 0);
-}
-```
-
-### Example 5: UINullWindow with Explicit CGContext
-
-```objc
-#import <MulleUIOS/MulleUIOS.h>
-
-int   main( void)
-{
-   UIApplication           *app;
-   id <UIWindow>           window;
-   id <UIGraphicsContext>  context;
-   UINullOSWindow          *osWindow;
-
-   app = [UIApplication instance];
-
-   // Create null OS window explicitly
-   osWindow = [[[UINullOSWindow alloc] initWithFrame:CGRectMake( 0, 0, 64, 64)
-                                      titleUTF8String:NULL
-                                            styleMask:UIWindowStyleMaskDefault] autorelease];
-
-   // Wrap in UINullWindow
-   window = (id <UIWindow>) [[[UINullWindow alloc] initWithOSWindow:osWindow] autorelease];
-   [app addWindow:window];
-
-   // UINullWindow can still create a CGContext if needed
-   context = [window renderGraphicsContext];
-   if( ! context)
-   {
-      fprintf( stderr, "No graphics context\n");
-      return( 1);
-   }
-
-   // Process frames for testing
-   [window processOneFrame:0.016];
-
-   [app terminate];
-   return( 0);
-}
-```
-
 ## 7. Dependencies
 
-MulleUIOS directly depends on:
+Direct mulle-sde library dependencies per config (from `.mulle/etc/sourcetree/<config>`):
 
-- **MulleUIWindow** - Core window and view hierarchy, event handling, application lifecycle
-- **MulleGraphics** - CALayer/CGGraphicsLayer rendering, CGContext, CGImage, NanoVG bindings
-- **MulleGLFW** - GLFW window system bindings (GLFWOSWindow, event translation)
-- **mulle-objc-list** - Runtime introspection tool (build-time dependency, not linked)
+| Config       | Window System | Renderer Core | Backend           | Extra              |
+|--------------|---------------|---------------|--------------------|--------------------|
+| `glfw`       | MulleGLFW     | MulleCGNanovg | MulleCGNanovgGL    | —                  |
+| `sdl`        | MulleSDL      | MulleCGNanovg | MulleCGNanovgGL    | —                  |
+| `sdl-d3d11`  | MulleSDL      | MulleCGNanovg | (D3D11 craftinfo)  | craftinfo overlay  |
 
-Optional backend alternatives:
-- **MulleSDL** - SDL window system bindings (alternative to MulleGLFW)
+Common to all configs:
+- **MulleUICore** — Core window/view hierarchy, event handling, application lifecycle, layout context
+- **MulleCGNanovg** — NanoVG-based CGContext and CGGraphicsLayer rendering abstraction
+- **mulle-objc-list** — Build-time runtime introspection tool (no-header, no-link)
 
-All dependencies cascade their own dependencies (MulleObjC, mulle-core, etc.).
+The `sdl-d3d11` config uses a craftinfo overlay (`craftinfo/MulleCGNanovg-craftinfo.d3d11`) instead of `MulleCGNanovgGL`; this sets the `MULLE_CG_BACKEND` definition to compile for Direct3D 11.
+
+All dependencies cascade their own transitive dependencies (MulleObjC, mulle-core, mulle-allocator, etc.). For the full rendering pipeline architecture, see `asset/dox/RENDERING-SYSTEM.md`.

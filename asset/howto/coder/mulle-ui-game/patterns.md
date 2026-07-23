@@ -328,6 +328,93 @@ static BOOL   draw( CGGraphicsLayer *layer, CGContext *context)
 Prefer `CAAnimation` for smooth property animation. Use `deltaTime` only for
 game-logic updates that need per-frame time (physics, cooldowns, spawn timers).
 
+## CAOpenGLLayer — raw OpenGL rendering in a layer
+
+Use for custom shaders, 3D elements, or compute-style effects. The NanoVG
+context is suspended while OpenGL drawing runs, so you can mix both:
+
+```objc
+@interface MyGLLayer : CAOpenGLLayer
+@end
+
+@implementation MyGLLayer
+
+- (void) drawOpenGLInContext:(CGContext *) context
+{
+   glClearColor( 0.2, 0.2, 0.4, 1.0);
+   glClear( GL_COLOR_BUFFER_BIT);
+#ifdef MULLE_CG_HAVE_DEPRECATED_OPENGL
+   glBegin( GL_TRIANGLES);
+   glColor3f( 1.0, 0.0, 0.0);
+   glVertex2f( -0.5, -0.5);
+   glColor3f( 0.0, 1.0, 0.0);
+   glVertex2f(  0.5, -0.5);
+   glColor3f( 0.0, 0.0, 1.0);
+   glVertex2f(  0.0,  0.5);
+   glEnd();
+#endif
+}
+
+@end
+```
+
+Lifecycle events:
+- `beginOpenGLWithContext:` — sets viewport from `_viewPort` and scissor from `_scissor`
+- `viewPortDidChange:` — callback fires when viewport changes (override or set `viewPortDidChangeCallback`)
+- `endOpenGLWithContext:` — calls `glFlush` then disables `GL_SCISSOR_TEST`
+- `drawsBackgroundWithAlpha:` — always returns `YES`, background is always drawn even if clear color
+
+Reference: `src/CAOpenGLLayer.h`, `demo/src/main-glfw-cglayer.m`.
+
+## Offscreen rendering to CGFramebuffer
+
+Render to a GPU framebuffer first, then composite the result onto the window.
+Useful for post-processing, minimaps, or render-to-texture pipelines:
+
+```objc
+static UIWindowDisplayBits   display( id <UIOSWindow> window_in)
+{
+   MyWindow      *window = (MyWindow *) window_in;
+   CGRect        canvas;
+   CGContext     *context;
+   CGFrameInfo   frameInfo;
+   CGFramebuffer *offscreen;
+
+   canvas.origin = CGPointZero;
+   canvas.size   = [window os_windowSize];
+   context       = [window context];
+
+   frameInfo = CGFrameInfoSFMake( canvas, [window os_framebufferSize], 1.0);
+
+   // 1. Render to offscreen framebuffer
+   [context setRendersOffScreen:YES];
+   [context beginRender:&frameInfo];
+   drawScene( context, canvas);             // your drawing code
+   [context suspendRender];
+   offscreen = [context _endRender];        // grab the offscreen buffer
+
+   // 2. Composite offscreen result onto window
+   [context setRendersOffScreen:NO];
+   [context beginRender:&frameInfo];
+   [context clearFramebuffer];
+   [offscreen drawRect:CGRectInset( canvas, 10, 10)
+               options:NULL
+               context:context];
+   [context endRender];
+
+   // 3. Recycle for next frame (avoids re-allocation)
+   [context recycleRenderedFramebuffer:offscreen];
+
+   return( 0);
+}
+```
+
+The offscreen framebuffer is a `CGFramebuffer` (which is also a `CGImage`), so
+it can be used as a texture. Call `recycleRenderedFramebuffer:` to reuse the
+same GPU buffer across frames instead of allocating a new one each time.
+
+Full working example: `demo/src/main-glfw-draw-offscreen.m`.
+
 ## Sound
 
 See `mulle-sde howto cat mulle-audio/coder` for PCM generation, voice registration,
