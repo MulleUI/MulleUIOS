@@ -1,22 +1,13 @@
 # MulleUIOS
 
-#### 💻📱 MulleUIOS provides platform/OS specifica
+Part of [MulleUI](https://github.com/MulleUI) — UIKit-shaped modular GUI libraries for mulle-objc.
+
+#### 🛸 MulleUIOS provides platform/OS specifications
 
 
-# MulleUIOS
-
-#### 💻📱 MulleUIOS provides platform/OS specifica
-
-
-===
-MEMO: This is actually MulleUIOSGLFWNanoVG or so, there needs to be another
-      project called MulleUISDLNanoVG or MulleUISDLSkia that mixes backend
-      and drawing library. (Or use different configs ?)
-===
-
-This project ties the underlying window system, graphics context and drawing
-library together. In theory this could be on top of some kind of ncurses
-windowing, with an ASCII renderer. But in practicality it's probably this:
+This project is the entry point that binds a window system, graphics context
+and drawing library together. In theory this could be on top of some kind of
+ncurses windowing, with an ASCII renderer. In practice it's this:
 
 OS      | Windows | Drawing      | State
 --------|---------|--------------|-------
@@ -28,12 +19,19 @@ windows | GLFW    | nanovg.gl3   | Works
 windows | SDL2    | nanovg.d3d11 | Planned
 
 
-The project itself is relatively bare, except for glue code. For instance
-CALayer is made a UILayer in MulleUIOS.
+The project itself contains little more than glue code, for instance
+CALayer is made a UILayer in MulleUIOS. It also contains quite a few leak and
+functionality tests.
 
-Also this project contains quite a few leak and functionality tests.
 
+## Build the demo
 
+The `demo/` folder is a [mulle-sde](//github.com/mulle-sde) project:
+
+``` sh
+cd demo
+mulle-sde craft
+```
 
 
 
@@ -42,6 +40,14 @@ Also this project contains quite a few leak and functionality tests.
 | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/MulleUI/MulleUIOS.svg) [![Build Status](https://github.com/MulleUI/MulleUIOS/workflows/CI/badge.svg)](//github.com/MulleUI/MulleUIOS/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for MulleUIOS](https://deepwiki.com/MulleUI/MulleUIOS)
 
 
+
+
+## Documentation & Guides
+
+* [API Summary](asset/dox/api/toc)
+* [Coder Guide](asset/howto/coder/mulle-ui-game)
+* [Debugger Guide](asset/howto/debugger/mulle-ui-game)
+* [Verifier Guide](asset/howto/verifier/mulle-uios)
 
 
 
@@ -112,6 +118,9 @@ Platform        | Mode
 Linux/GLES      | EdgeAA (software nanovg — MSAA not available with GLES)
 Windows/GL      | MSAA4 (hardware, via GLFW)
 
+The other platforms from the table above (darwin, android, ios) have no mode
+yet: their backends are still Experimental or Planned.
+
 To disable anti-aliasing:
 
 ```objc
@@ -128,7 +137,7 @@ styleMask = (UIWindowStyleMaskDefault & ~UIWindowStyleAntiAlias)
 
 ### Build with Debug Mesa OpenGL (Linux)
 
-Use [https://gist.github.com/mulle-nat/344cc74f2e9f36a47e50f7194290b884]()
+Use [this gist](https://gist.github.com/mulle-nat/344cc74f2e9f36a47e50f7194290b884)
 to build a debug OpenGL Mesa library with drivers.
 
 Then set:
@@ -138,7 +147,7 @@ mulle-sde env --this-user-host set CMAKE_PREFIX_PATH '/opt/mesa/debug/26.2.0-dev
 mulle-sde env --this-user-host set LD_LIBRARY_PATH '/opt/mesa/debug/26.2.0-devel/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}'
 ```
 
-The `CMAKE_PREFIX_PATH` environrment will use the custom debug Mesa libraries
+The `CMAKE_PREFIX_PATH` environment will use the custom debug Mesa libraries
 for use with cmake.
 The `LD_LIBRARY_PATH` will ensure the debug drivers are found during runtime.
 
@@ -187,8 +196,9 @@ Install the requirements:
 | Requirements                                 | Description
 |----------------------------------------------|-----------------------
 | [MulleUICore](https://github.com/MulleUI/MulleUICore)             | 🌀 UI for mulle-objc - Desktop and Mobile
-| [MulleCGNanovg](https://github.com/MulleUI/MulleCGNanovg)             | 🛸 MulleCGNanovg does something
-| [MulleCGNanovgGL](https://github.com/MulleUI/MulleCGNanovgGL)             | 🛸 MulleCGNanovgGL does something
+| [MulleCGNanovg](https://github.com/MulleUI/MulleCGNanovg)             | 🛰️ nanovg rendering backend for MulleCG
+| [MulleCGNanovgGL](https://github.com/MulleUI/MulleCGNanovgGL)             | ☄️ OpenGL implementation of the MulleCGNanovg backend
+| [MulleCGNanovgD3D11](https://github.com/MulleUI/MulleCGNanovgD3D11)             | 🛸 Direct3D 11 implementation of the MulleCGNanovg backend (planned)
 | [MulleGLFW](https://github.com/MulleUI/MulleGLFW)             | 🌐 MulleGLFW provides platform windows and events
 | [mulle-objc-list](https://github.com/mulle-objc/mulle-objc-list)             | 📒 Lists mulle-objc runtime information contained in executables.
 

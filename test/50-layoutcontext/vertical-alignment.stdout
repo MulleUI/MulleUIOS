@@ -1,6 +1,6 @@
 === Baseline Alignment (Default) ===
 # Single line:
-text:"VfL" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 50 [1 rows]
+text:"VfL" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 37.44 [1 rows]
 # Two lines (even - midpoint between center baselines):
 text:"VfL
 Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 42 [2 rows]
@@ -53,5 +53,5 @@ text:"VfL
 Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 400 200 -> origin:200 92 [2 rows]
 text:"VfL
 Bochum" align:UITextAlignmentMiddle visual:NO rect:0 0 400 200 -> origin:200 106 [2 rows]
-text:"1848" align:UITextAlignmentBaseline visual:NO rect:10 20 100 60 -> origin:60 50 [1 rows]
+text:"1848" align:UITextAlignmentBaseline visual:NO rect:10 20 100 60 -> origin:60 37.44 [1 rows]
 text:"1848" align:UITextAlignmentTop visual:YES rect:10 20 100 60 -> origin:60 32 [1 rows]

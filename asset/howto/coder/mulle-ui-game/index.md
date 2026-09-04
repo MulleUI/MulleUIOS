@@ -86,7 +86,7 @@ window = [UIWindow windowWithLayer:layer
                          styleMask:styleMask];
 [window setFrameRateSynced];
 
-return( UIApplicationRunWindow( window));
+return( [app runWindow:window]);
 ```
 
 - `UIWindowStyleMaskNonRetained` runs single-threaded. Objects created in

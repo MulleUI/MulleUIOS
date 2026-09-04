@@ -41,6 +41,10 @@
 
 
 
+NSUInteger   MulleUIOSGetVersion( void)
+{
+   return( MULLE_UI_OS_VERSION);
+}
 
 // need this to be able to get protocol into runtime
 @implementation UIWindow( UIEventReceiver)

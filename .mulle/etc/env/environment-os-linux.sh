@@ -1,7 +1,7 @@
 #
 #
 #
-export MULLE_SOURCETREE_CONFIG_NAME="sdl"
+export MULLE_SOURCETREE_CONFIG_NAME="glfw"
 
 
 #

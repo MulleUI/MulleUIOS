@@ -25,7 +25,6 @@ static BOOL   drawStuff( CGGraphicsLayer *layer, CGContext *context)
    CAPolarPoint        polar;
    CGColor             color;
    CGFloat             end;
-   CGFloat             initial;
    CGFloat             radius;
    CGFloat             start;
    CGPoint             centerPoint;

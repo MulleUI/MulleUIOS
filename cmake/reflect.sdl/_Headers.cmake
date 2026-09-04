@@ -12,6 +12,7 @@ endif()
 
 set( INCLUDE_DIRS
 src/reflect.glfw
+src/reflect.glfw-metal
 src/reflect.sdl
 src/reflect.sdl-d3d11
 src/generic
@@ -24,6 +25,8 @@ src
 set( PRIVATE_GENERATED_HEADERS
 src/reflect.glfw/_MulleUIOS-import-private.h
 src/reflect.glfw/_MulleUIOS-include-private.h
+src/reflect.glfw-metal/_MulleUIOS-import-private.h
+src/reflect.glfw-metal/_MulleUIOS-include-private.h
 src/reflect.sdl/_MulleUIOS-import-private.h
 src/reflect.sdl/_MulleUIOS-include-private.h
 src/reflect.sdl-d3d11/_MulleUIOS-import-private.h
@@ -46,6 +49,10 @@ src/reflect.glfw/_MulleUIOS-export.h
 src/reflect.glfw/_MulleUIOS-import.h
 src/reflect.glfw/_MulleUIOS-include.h
 src/reflect.glfw/_MulleUIOS-provide.h
+src/reflect.glfw-metal/_MulleUIOS-export.h
+src/reflect.glfw-metal/_MulleUIOS-import.h
+src/reflect.glfw-metal/_MulleUIOS-include.h
+src/reflect.glfw-metal/_MulleUIOS-provide.h
 src/reflect.sdl/_MulleUIOS-export.h
 src/reflect.sdl/_MulleUIOS-import.h
 src/reflect.sdl/_MulleUIOS-include.h

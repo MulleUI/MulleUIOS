@@ -8,7 +8,7 @@ text: "VfL" h:UITextAlignmentRight v:UITextAlignmentMiddle rect:0 0 200 100 -> o
 text: "VfL" h:UITextAlignmentLeft v:UITextAlignmentBottom rect:0 0 200 100 -> origin:0 96.56 [0 newlines]
 text: "VfL" h:UITextAlignmentCenter v:UITextAlignmentBottom rect:0 0 200 100 -> origin:100 96.56 [0 newlines]
 text: "VfL" h:UITextAlignmentRight v:UITextAlignmentBottom rect:0 0 200 100 -> origin:200 96.56 [0 newlines]
-text: "VfL" h:UITextAlignmentCenter v:UITextAlignmentBaseline rect:0 0 200 100 -> origin:100 50 [0 newlines]
+text: "VfL" h:UITextAlignmentCenter v:UITextAlignmentBaseline rect:0 0 200 100 -> origin:100 37.44 [0 newlines]
 text: "VfL" h:UITextAlignmentCenter v:UITextAlignmentMiddle rect:0 0 200 100 -> origin:100 56 [0 newlines]
 text: "VfL" h:UITextAlignmentCenter v:UITextAlignmentFill rect:0 0 200 100 -> origin:100 12.56 [0 newlines]
 

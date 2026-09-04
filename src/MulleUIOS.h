@@ -1,11 +1,8 @@
-#define MULLE_UIOS_VERSION  ((0 << 20) | (0 << 8) | 1)
-
 //
-//  MulleUIOS.m
+//  MulleUIOS.h
 //  MulleUIOS
 //
 //  Copyright (c) 2021 Nat! - Mulle kybernetiK.
-//  Copyright (c) 2021 Codeon GmbH.
 //  All rights reserved.
 //
 //
@@ -35,10 +32,9 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 //
-
 #import "import.h"
 
-#define MULLE_UI_OS_VERSION   ((0 << 20) | (0 << 8) | 1)
+#define MULLE_UI_OS_VERSION   ((0 << 20) | (1 << 8) | 0)
 
 #import "_MulleUIOS-export.h"
 #include "_MulleUIOS-provide.h"

@@ -180,8 +180,6 @@ static void   codyDraw2( CGContext *context, float x, float y, char *s, float fo
 static BOOL   drawStuff( CGGraphicsLayer *layer, CGContext *context)
 {
    float               fontSize;
-   char                *text[] = { "y", "|", "`", "_" };
-   NSUInteger          i, n;
 
    fontSize = 20.0;
 

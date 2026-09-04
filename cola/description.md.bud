@@ -1,18 +1,7 @@
 
-# MulleUIOS
-
-#### 💻📱 MulleUIOS provides platform/OS specifica
-
-
-===
-MEMO: This is actually MulleUIOSGLFWNanoVG or so, there needs to be another
-      project called MulleUISDLNanoVG or MulleUISDLSkia that mixes backend
-      and drawing library. (Or use different configs ?)
-===
-
-This project ties the underlying window system, graphics context and drawing
-library together. In theory this could be on top of some kind of ncurses
-windowing, with an ASCII renderer. But in practicality it's probably this:
+This project is the entry point that binds a window system, graphics context
+and drawing library together. In theory this could be on top of some kind of
+ncurses windowing, with an ASCII renderer. In practice it's this:
 
 OS      | Windows | Drawing      | State
 --------|---------|--------------|-------
@@ -24,9 +13,16 @@ windows | GLFW    | nanovg.gl3   | Works
 windows | SDL2    | nanovg.d3d11 | Planned
 
 
-The project itself is relatively bare, except for glue code. For instance
-CALayer is made a UILayer in MulleUIOS.
+The project itself contains little more than glue code, for instance
+CALayer is made a UILayer in MulleUIOS. It also contains quite a few leak and
+functionality tests.
 
-Also this project contains quite a few leak and functionality tests.
 
+## Build the demo
 
+The `demo/` folder is a [mulle-sde](//github.com/mulle-sde) project:
+
+``` sh
+cd demo
+mulle-sde craft
+```

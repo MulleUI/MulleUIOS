@@ -1,11 +1,12 @@
 {
    project =
    {
-      description="💻📱 MulleUIOS provides platform/OS specifica";
+      description="🛸 MulleUIOS provides platform/OS specifications";
       domain="github";
       language="c";
       dialect="objc";
       name="MulleUIOS";
+      version="0.1.0";
       user="MulleUI";
       repo="MulleUIOS";
       homepage="https://github.com/MulleUI/MulleUIOS";
@@ -22,21 +23,29 @@
          user="MulleUI";
       },
       {
-         description="🛸 MulleCGNanovg does something";
+          description="🛰️ nanovg rendering backend for MulleCG";
          domain="github";
          name="MulleCGNanovg";
          repo="MulleCGNanovg";
          url="https://github.com/MulleUI/MulleCGNanovg";
          user="MulleUI";
       },
-      {
-         description="🛸 MulleCGNanovgGL does something";
-         domain="github";
-         name="MulleCGNanovgGL";
-         repo="MulleCGNanovgGL";
-         url="https://github.com/MulleUI/MulleCGNanovgGL";
-         user="MulleUI";
-      },
+       {
+          description="☄️ OpenGL implementation of the MulleCGNanovg backend";
+          domain="github";
+          name="MulleCGNanovgGL";
+          repo="MulleCGNanovgGL";
+          url="https://github.com/MulleUI/MulleCGNanovgGL";
+          user="MulleUI";
+       },
+       {
+          description="🛸 Direct3D 11 implementation of the MulleCGNanovg backend (planned)";
+          domain="github";
+          name="MulleCGNanovgD3D11";
+          repo="MulleCGNanovgD3D11";
+          url="https://github.com/MulleUI/MulleCGNanovgD3D11";
+          user="MulleUI";
+       },
       {
          description="🌐 MulleGLFW provides platform windows and events";
          domain="github";

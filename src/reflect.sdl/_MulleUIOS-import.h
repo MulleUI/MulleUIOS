@@ -42,6 +42,23 @@
 #import <MulleCGNanovg/MulleCGNanovg.h>   // MulleCGNanovg
 
 // To remove the following dependency (headers and library) completely:
+//   `mulle-sde dependency remove MulleCGNanovgMTL`
+// (Use AFE3B0C8-37F0-4E4D-8DD6-3FDCBC0BB343 instead of MulleCGNanovgMTL, if there are duplicate entries)
+//
+// You can tweak the following #import with these commands:
+//    remove #import      : `mulle-sde dependency mark MulleCGNanovgMTL no-header`
+//    rename              : `mulle-sde dependency|library set MulleCGNanovgMTL include whatever.h`
+//    reorder             : `mulle-sde dependency move MulleCGNanovgMTL <up|down>`
+//    toggle objc         : `mulle-sde dependency mark MulleCGNanovgMTL [no-]import`
+//    toggle public       : `mulle-sde dependency mark MulleCGNanovgMTL [no-]public`
+//    toggle optional     : `mulle-sde dependency mark MulleCGNanovgMTL [no-]require`
+//    remove for platform : `mulle-sde dependency mark MulleCGNanovgMTL no-platform-<uname>`
+//        (use `mulle-sourcetree-to-c --unames` to list known values)
+# if defined( __APPLE__)
+# import <MulleCGNanovgMTL/MulleCGNanovgMTL.h>   // MulleCGNanovgMTL
+#endif
+
+// To remove the following dependency (headers and library) completely:
 //   `mulle-sde dependency remove MulleCGNanovgGL`
 // (Use 4617789F-4D28-458A-A439-75A77AC5ABF1 instead of MulleCGNanovgGL, if there are duplicate entries)
 //
