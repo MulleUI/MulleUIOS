@@ -545,20 +545,32 @@ export MULLE_CG_NANOVG_GL_BRANCH="prerelease"
 
 
 #
-# MulleSDL nodetype: ${MULLE_SDL_NODETYPE:-tar}
+# MulleGLFW nodetype: ${MULLE_GLFW_NODETYPE:-tar}
 #
-export MULLE_SDL_NODETYPE="git"
+export MULLE_GLFW_NODETYPE="git"
 
 
 #
-# MulleSDL url: ${MULLE_SDL_URL:-https://github.com/MulleUI/MulleSDL/archive/${MULLE_TAG}.tar.gz}
+# MulleGLFW url: ${MULLE_GLFW_URL:-https://github.com/MulleUI/MulleGLFW/archive/${MULLE_TAG}.tar.gz}
 #
-export MULLE_SDL_URL="https://github.com/MulleUI/MulleSDL.git"
+export MULLE_GLFW_URL="https://github.com/MulleUI/MulleGLFW.git"
 
 
 #
-# MulleSDL branch: ${MULLE_SDL_BRANCH}
+# MulleGLFW branch: ${MULLE_GLFW_BRANCH}
 #
-export MULLE_SDL_BRANCH="prerelease"
+export MULLE_GLFW_BRANCH="prerelease"
+
+
+#
+# mulle-objc-list nodetype: ${MULLE_OBJC_LIST_NODETYPE:-tar}
+#
+export MULLE_OBJC_LIST_NODETYPE="git"
+
+
+#
+# mulle-objc-list url: ${MULLE_OBJC_LIST_URL:-https://github.com/mulle-objc/mulle-objc-list/archive/${MULLE_TAG}.tar.gz}
+#
+export MULLE_OBJC_LIST_URL="https://github.com/mulle-objc/mulle-objc-list.git"
 
 

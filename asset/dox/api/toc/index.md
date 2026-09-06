@@ -1,15 +1,17 @@
 # MulleUIOS Library Documentation for AI
-<!-- Keywords: platform, windowing, graphics, GLFW, SDL, OpenGL, headless -->
+<!-- Keywords: platform, graphics, GLFW, SDL, OpenGL, Metal, headless -->
 ## 1. Introduction & Purpose
 
 MulleUIOS is the platform integration layer that wires the MulleUICore UIWindow/CALayer hierarchy to the underlying OS window system and graphics rendering stack. It acts as the glue between abstract UI concepts (UIWindow, UIView) and concrete platform implementations (GLFW/SDL for windowing, CGContext/NanoVG for rendering). The library is thin by design—it is composed of Objective-C categories that configure backend classes at class-load time, and a single `CAOpenGLLayer` class for embedding raw OpenGL drawing within the layer tree.
 
 **Key features:**
 - Platform-specific window system integration via GLFW or SDL (selectable at build time)
-- Graphics context binding via MulleCGNanovg with multiple backends (OpenGL GL3/GLES2/GLES3, Direct3D 11)
+- Graphics context binding via MulleCGNanovg with multiple backends (OpenGL GL3/GLES2/GLES3, Direct3D 11, Metal)
+- Metal backend (CG_METAL) on macOS: GLFW `GLFW_NO_API` window rendered via `CAMetalLayer` (from `MulleCGNanovgMTL`), experimental
 - Headless/offscreen rendering support through `UINullWindow` and `UINullOSWindow`
 - `CAOpenGLLayer` for embedding raw OpenGL drawing within the UIView/CALayer hierarchy
-- Build-time config switching: `mulle-sde config switch glfw,sdl,sdl-d3d11`
+- Build-time config switching: `mulle-sde config switch glfw,sdl,sdl-d3d11,glfw-metal`
+- Version API: `MULLE_UI_OS_VERSION` macro and `MulleUIOSGetVersion()` return the library version
 - Central per-thread layout context via `CGLayoutContext` (provided by MulleUICore)
 
 ## 2. Key Concepts & Design Philosophy
@@ -36,11 +38,22 @@ Class methods `+setOSWindowClass:` and `+setOSGraphicsContextClass:` on both `UI
 
 ### Conditional Compilation & Configs
 
-Categories are wrapped in `#ifdef HAVE_IMPORT__MULLE_GLFW` / `#ifdef HAVE_IMPORT__MULLE_SDL` / `#ifdef HAVE_IMPORT__MULLE_CG`. Build-time configs (`glfw`, `sdl`, `sdl-d3d11`) select which dependencies are pulled in, determining which conditional blocks are active. Switch via `mulle-sde config switch <name>`.
+Categories are wrapped in `#ifdef HAVE_IMPORT__MULLE_GLFW` / `#ifdef HAVE_IMPORT__MULLE_SDL` / `#ifdef HAVE_IMPORT__MULLE_CG`. Build-time configs (`glfw`, `sdl`, `sdl-d3d11`, `glfw-metal`) select which dependencies are pulled in, determining which conditional blocks are active. Switch via `mulle-sde config switch <name>`.
+
+The `glfw-metal` config (darwin-only) pulls in `MulleCGNanovgMTL` instead of `MulleCGNanovgGL`. When the active NanoVG backend is `CG_METAL`, `+osGraphicsHints` returns `GLFWGraphicsHintsNone`, which makes `GLFWOSWindow` attach a `CAMetalLayer` instead of creating a GL context; the Metal CG backend renders into it via `-backendMetalLayer`.
 
 ## 3. Core API & Data Structures
 
 ### 3.1. `MulleUIOS.h` — Main Public Header
+
+#### Version API
+
+```c
+#define MULLE_UI_OS_VERSION   ((0 << 20) | (1 << 8) | 0)
+```
+
+- **Purpose:** Encodes the MulleUIOS version as `major<<20 | minor<<8 | patch`. Currently `0.1.0`.
+- **Accessor:** The implementation defines `NSUInteger MulleUIOSGetVersion( void)` in `MulleUIOS.m` returning `MULLE_UI_OS_VERSION`. Note: it is defined but not declared in the public header.
 
 #### `@interface UIWindow( OSWindowClass) <UIEventReceiver>`
 
@@ -51,7 +64,7 @@ Categories are wrapped in `#ifdef HAVE_IMPORT__MULLE_GLFW` / `#ifdef HAVE_IMPORT
 - `+ (Class) osWindowClass` — Returns the currently configured OS window class. Defaults to `[GLFWOSWindow class]` (under `#ifdef HAVE_IMPORT__MULLE_GLFW`) or `[SDLOSWindow class]` (under `#ifdef HAVE_IMPORT__MULLE_SDL`), or `ClassStatic.windowClass` (may be `Nil`) if neither backend is compiled in.
 
 **Platform Graphics Hints (implementation-only, in `UIWindow+MulleUIOS.m`, not declared in public header):**
-- `+ (UIOSWindowGraphicsHints) osGraphicsHints` — Returns a `UIOSWindowGraphicsHints` struct with platform-specific GL context settings (version, profile). Derived from `[CGContext nanoVGBackend]` and mapped to GLFW or SDL hint constants. Returns a zeroed struct if neither backend is compiled.
+- `+ (UIOSWindowGraphicsHints) osGraphicsHints` — Returns a `UIOSWindowGraphicsHints` struct with platform-specific GL context settings (version, profile). Derived from `[CGContext nanoVGBackend]` and mapped to GLFW or SDL hint constants. For GLFW: `CG_GL3`/`CG_GL3_2`/`CG_GLES2`/`CG_GLES3`/`CG_GLES3_2` map to the respective `GLFWGraphicsHints*`; `CG_METAL` maps to `GLFWGraphicsHintsNone` (a `GLFW_NO_API` window hosting a `CAMetalLayer`). For SDL: `CG_D3D11` maps to `SDLGraphicsHintsD3D11`. Returns a zeroed struct if neither backend is compiled.
 
 #### `@interface UIWindow( OSGraphicsContextClass)`
 
@@ -120,6 +133,12 @@ These categories are implemented in `.m` files. Their method declarations are in
 - `+ (void) setOSGraphicsContextClass:(Class) cls` — Override graphics context class for null windows. Set to `Nil` for fully headless operation.
 - `+ (Class) osGraphicsContextClass` — Defaults to `[CGContext class]`.
 
+#### `UINullOSWindow( CG)` — in `UINullWindow+CG.m`
+
+**Purpose:** Dictates which graphics context a `UINullOSWindow` (the headless OS window) uses. Because it owns no GPU backend, it always wants the no-draw context — regardless of whether the owning window is a `UINullWindow` or a regular `UIWindow` created with `UIWindowStyleNoDrawing` (both route to a `UINullOSWindow`).
+
+- `- (Class) osGraphicsContextClass` — Returns `[CGNullContext class]`. GPU-backed OS windows do not implement this and the window layer falls back to its class default (`CGContext`).
+
 ## 4. Performance Characteristics
 
 ### Overhead
@@ -166,7 +185,7 @@ These categories are implemented in `.m` files. Their method declarations are in
 
 6. **CAOpenGLLayer:** Override `drawOpenGLInContext:` for custom GL drawing. Call `[super drawInContext:context]` if overriding `drawInContext:`.
 
-7. **Changing Configs:** Switch backend configs at build time with `mulle-sde config switch glfw,sdl,sdl-d3d11`. Each config has its own reflect directory and dependency set.
+7. **Changing Configs:** Switch backend configs at build time with `mulle-sde config switch glfw,sdl,sdl-d3d11,glfw-metal`. Each config has its own reflect directory and dependency set.
 
 ### Common Pitfalls
 
@@ -335,12 +354,13 @@ Direct mulle-sde library dependencies per config (from `.mulle/etc/sourcetree/<c
 | `glfw`       | MulleGLFW     | MulleCGNanovg | MulleCGNanovgGL    | —                  |
 | `sdl`        | MulleSDL      | MulleCGNanovg | MulleCGNanovgGL    | —                  |
 | `sdl-d3d11`  | MulleSDL      | MulleCGNanovg | (D3D11 craftinfo)  | craftinfo overlay  |
+| `glfw-metal` | MulleGLFW     | MulleCGNanovg | MulleCGNanovgMTL   | darwin-only        |
 
 Common to all configs:
 - **MulleUICore** — Core window/view hierarchy, event handling, application lifecycle, layout context
 - **MulleCGNanovg** — NanoVG-based CGContext and CGGraphicsLayer rendering abstraction
 - **mulle-objc-list** — Build-time runtime introspection tool (no-header, no-link)
 
-The `sdl-d3d11` config uses a craftinfo overlay (`craftinfo/MulleCGNanovg-craftinfo.d3d11`) instead of `MulleCGNanovgGL`; this sets the `MULLE_CG_BACKEND` definition to compile for Direct3D 11.
+The `sdl-d3d11` config uses a craftinfo overlay (`craftinfo/MulleCGNanovg-craftinfo.d3d11`) instead of `MulleCGNanovgGL`; this sets the `MULLE_CG_BACKEND` definition to compile for Direct3D 11. The `glfw-metal` config replaces `MulleCGNanovgGL` with `MulleCGNanovgMTL` (marked `only-platform-darwin`); it selects the `CG_METAL` backend, which drives the `GLFWGraphicsHintsNone`/`CAMetalLayer` path in `UIWindow+MulleUIOS.m`.
 
 All dependencies cascade their own transitive dependencies (MulleObjC, mulle-core, mulle-allocator, etc.). For the full rendering pipeline architecture, see `asset/dox/RENDERING-SYSTEM.md`.
