@@ -68,11 +68,11 @@ int   main( int argc, char *argv[])
    [layer setTextAlignment:UITextAlignmentCenter];
 
    printf( "=== Baseline Alignment (Default) ===\n");
-   printf( "# Single line:\n");
+   printf( "# Single line (baseline at ascender):\n");
    test_alignment( layer, context, "VfL", UITextAlignmentBaseline, NO, rect);
-   printf( "# Two lines (even - midpoint between center baselines):\n");
+   printf( "# Two lines (row block centered):\n");
    test_alignment( layer, context, "VfL\nBochum", UITextAlignmentBaseline, NO, rect);
-   printf( "# Three lines (odd - middle row baseline):\n");
+   printf( "# Three lines (middle row baseline at center):\n");
    test_alignment( layer, context, "VfL\nBochum\n1848", UITextAlignmentBaseline, NO, rect);
 
    printf( "\n=== Top Alignment ===\n");

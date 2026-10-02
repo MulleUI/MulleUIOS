@@ -26,15 +26,16 @@ static void  verify_alignment_math( void)
    
    printf( "Vertical Alignment (Y-axis) for single line:\n");
    printf( "  Top:      y = ascender = 12.56\n");
-   printf( "  Middle:   y = (height + ascender - descender) / 2 = (100 + 12.56 - 3.44) / 2 = 54.56\n");
+   printf( "  Middle:   y = height / 2 = 100 / 2 = 50\n");
    printf( "  Bottom:   y = height - descender = 100 - 3.44 = 96.56\n");
-   printf( "  Baseline: y = height / 2 = 100 / 2 = 50\n\n");
+   printf( "  Baseline: y = ascender = 12.56 (same as Top for a single row)\n\n");
    
    printf( "For multi-line (3 lines, lineHeight=16):\n");
    printf( "  rowsHeight = 16 * 3 = 48\n");
    printf( "  Top:      y = ascender = 12.56\n");
-   printf( "  Middle:   y = (height - rowsHeight) / 2 + ascender = (100 - 48) / 2 + 12.56 = 26 + 12.56 = 38.56... hmm\n");
-   printf( "  Bottom:   y = height - rowsHeight + ascender = 100 - 48 + 12.56 = 64.56... hmm\n");
+   printf( "  Middle:   y = (height - rowsHeight) / 2 + ascender = (100 - 48) / 2 + 12.56 = 38.56\n");
+   printf( "  Bottom:   y = height - rowsHeight + ascender = 100 - 48 + 12.56 = 64.56\n");
+   printf( "  Baseline: y = (height - rowsHeight + lineHeight) / 2 = (100 - 48 + 16) / 2 = 34\n");
 }
 
 
@@ -56,6 +57,9 @@ static void  test_with_context( void)
    [layer setTextUTF8String:"VfL"];
    
    rect = CGRectMake( 0, 0, 200, 100);
+   // the layouter caps the number of rows by the layer canvas, so the frame
+   // must match the rect we test against (otherwise multi-line is truncated)
+   [layer setFrame:rect];
    
    printf( "\n=== Actual Values from textOriginInRect:context: ===\n");
    

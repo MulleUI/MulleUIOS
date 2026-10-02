@@ -1,30 +1,31 @@
 === Baseline Centering Test ===
 Canvas: 200x100, center.y = 50
 Font: 16px, lineHeight ~= 16px
-Expected: baseline should be at canvas center (diff ~= 0)
+Expected: odd rows (> 1) middle baseline at center (diff ~= 0);
+          single and even rows are not exactly centered
 
-1 row: text="A" origin.y=37.44 lineHeight=16.00 baseline@37.44 center@50.00 diff=-12.56
+1 row: text="A" origin.y=12.56 lineHeight=16.00 baseline@12.56 center@50.00 diff=-37.44
 2 rows: text="A
-B" origin.y=42.00 lineHeight=16.00 baseline@50.00 center@50.00 diff=0.00
+B" origin.y=46.56 lineHeight=16.00 baseline@54.56 center@50.00 diff=4.56
 3 rows: text="A
 B
-C" origin.y=37.44 lineHeight=16.00 baseline@53.44 center@50.00 diff=3.44
+C" origin.y=34.00 lineHeight=16.00 baseline@50.00 center@50.00 diff=0.00
 4 rows: text="A
 B
 C
-D" origin.y=26.00 lineHeight=16.00 baseline@50.00 center@50.00 diff=0.00
+D" origin.y=30.56 lineHeight=16.00 baseline@54.56 center@50.00 diff=4.56
 5 rows: text="A
 B
 C
 D
-E" origin.y=21.44 lineHeight=16.00 baseline@53.44 center@50.00 diff=3.44
+E" origin.y=18.00 lineHeight=16.00 baseline@50.00 center@50.00 diff=0.00
 
 === Different Canvas Size ===
 Canvas: 400x300, center.y = 150
 
-1 row: text="One" origin.y=137.44 lineHeight=16.00 baseline@137.44 center@150.00 diff=-12.56
+1 row: text="One" origin.y=12.56 lineHeight=16.00 baseline@12.56 center@150.00 diff=-137.44
 2 rows: text="One
-Two" origin.y=142.00 lineHeight=16.00 baseline@150.00 center@150.00 diff=0.00
+Two" origin.y=146.56 lineHeight=16.00 baseline@154.56 center@150.00 diff=4.56
 3 rows: text="One
 Two
-Three" origin.y=137.44 lineHeight=16.00 baseline@153.44 center@150.00 diff=3.44
+Three" origin.y=134.00 lineHeight=16.00 baseline@150.00 center@150.00 diff=0.00

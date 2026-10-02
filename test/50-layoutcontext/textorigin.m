@@ -121,7 +121,7 @@ int   main( int argc, char *argv[])
    test_alignment( layer, context, "VfL\nBochum\n1848", 
                    UITextAlignmentRight, UITextAlignmentBottom, rect);
 
-   // Multi-line baseline (behaves like middle for multi-line)
+   // Multi-line baseline (centers the row block; equals Middle for even rows)
    test_alignment( layer, context, "VfL\nBochum\n1848", 
                    UITextAlignmentCenter, UITextAlignmentBaseline, rect);
 

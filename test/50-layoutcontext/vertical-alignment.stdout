@@ -1,13 +1,13 @@
 === Baseline Alignment (Default) ===
-# Single line:
-text:"VfL" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 37.44 [1 rows]
-# Two lines (even - midpoint between center baselines):
+# Single line (baseline at ascender):
+text:"VfL" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 12.56 [1 rows]
+# Two lines (row block centered):
 text:"VfL
-Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 42 [2 rows]
-# Three lines (odd - middle row baseline):
+Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 46.56 [2 rows]
+# Three lines (middle row baseline at center):
 text:"VfL
 Bochum
-1848" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 37.44 [3 rows]
+1848" align:UITextAlignmentBaseline visual:NO rect:0 0 200 100 -> origin:100 34 [3 rows]
 
 === Top Alignment ===
 # Font metrics bounds:
@@ -28,30 +28,30 @@ text:"VfL
 Bochum
 1848" align:UITextAlignmentBottom visual:NO rect:0 0 200 100 -> origin:100 64.56 [3 rows]
 # Visual bounds:
-text:"VfL" align:UITextAlignmentBottom visual:YES rect:0 0 200 100 -> origin:100 100 [1 rows]
+text:"VfL" align:UITextAlignmentBottom visual:YES rect:0 0 200 100 -> origin:100 112 [1 rows]
 text:"VfL
 Bochum
-1848" align:UITextAlignmentBottom visual:YES rect:0 0 200 100 -> origin:100 68 [3 rows]
+1848" align:UITextAlignmentBottom visual:YES rect:0 0 200 100 -> origin:100 64 [3 rows]
 
 === Middle Alignment ===
 # Font metrics bounds:
-text:"VfL" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 56 [1 rows]
+text:"VfL" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 50 [1 rows]
 text:"VfL
 Bochum
-1848" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 56 [3 rows]
+1848" align:UITextAlignmentMiddle visual:NO rect:0 0 200 100 -> origin:100 38.56 [3 rows]
 # Visual bounds:
-text:"VfL" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 56 [1 rows]
+text:"VfL" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 50 [1 rows]
 text:"VfL
 Bochum
-1848" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 56 [3 rows]
+1848" align:UITextAlignmentMiddle visual:YES rect:0 0 200 100 -> origin:100 38 [3 rows]
 
 === Fill Alignment (Special) ===
 text:"VfL" align:UITextAlignmentFill visual:NO rect:0 0 200 100 -> origin:100 12.56 [1 rows]
 
 === Different Canvas Sizes ===
 text:"VfL
-Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 400 200 -> origin:200 92 [2 rows]
+Bochum" align:UITextAlignmentBaseline visual:NO rect:0 0 400 200 -> origin:200 96.56 [2 rows]
 text:"VfL
-Bochum" align:UITextAlignmentMiddle visual:NO rect:0 0 400 200 -> origin:200 106 [2 rows]
-text:"1848" align:UITextAlignmentBaseline visual:NO rect:10 20 100 60 -> origin:60 37.44 [1 rows]
+Bochum" align:UITextAlignmentMiddle visual:NO rect:0 0 400 200 -> origin:200 96.56 [2 rows]
+text:"1848" align:UITextAlignmentBaseline visual:NO rect:10 20 100 60 -> origin:60 32.56 [1 rows]
 text:"1848" align:UITextAlignmentTop visual:YES rect:10 20 100 60 -> origin:60 32 [1 rows]

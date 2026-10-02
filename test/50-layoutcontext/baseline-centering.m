@@ -5,9 +5,11 @@
 #import <MulleGraphics/MulleGraphics.h>
 
 
-// Test that baseline alignment properly centers the baseline reference:
-// - Odd rows: baseline of middle row at canvas center
-// - Even rows: midpoint between two center row baselines at canvas center
+// Test baseline alignment placement:
+// - A single row sits at "ascender" (identical to Top), so it is not centered
+// - Odd rows (> 1): baseline of the middle row at canvas center
+// - Even rows: the row block is centered, so the midpoint between the two
+//   center baselines is not necessarily the canvas center
 
 
 static void  test_baseline_centering( CATextLayer *layer,
@@ -84,7 +86,8 @@ int   main( int argc, char *argv[])
    printf( "=== Baseline Centering Test ===\n");
    printf( "Canvas: 200x100, center.y = 50\n");
    printf( "Font: 16px, lineHeight ~= 16px\n");
-   printf( "Expected: baseline should be at canvas center (diff ~= 0)\n\n");
+   printf( "Expected: odd rows (> 1) middle baseline at center (diff ~= 0);\n");
+   printf( "          single and even rows are not exactly centered\n\n");
 
    test_baseline_centering( layer, context, "A", rect);
    test_baseline_centering( layer, context, "A\nB", rect);
