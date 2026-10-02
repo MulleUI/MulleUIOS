@@ -5,7 +5,7 @@
 #
 
 VERSIONFILE="src/MulleUIOS.h"
-VERSIONNAME="MULLE_UIOS_VERSION"
+VERSIONNAME="MULLE_UI_OS_VERSION"
 
 #
 # Other files that get the version written into. Write only. Linefeed separated.

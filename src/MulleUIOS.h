@@ -34,7 +34,7 @@
 //
 #import "import.h"
 
-#define MULLE_UI_OS_VERSION   ((0 << 20) | (1 << 8) | 0)
+#define MULLE_UI_OS_VERSION   ((0UL << 20) | (1 << 8) | 1)
 
 #import "_MulleUIOS-export.h"
 #include "_MulleUIOS-provide.h"

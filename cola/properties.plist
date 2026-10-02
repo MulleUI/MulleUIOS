@@ -6,7 +6,7 @@
       language="c";
       dialect="objc";
       name="MulleUIOS";
-      version="0.1.0";
+      version="0.1.1";
       user="MulleUI";
       repo="MulleUIOS";
       homepage="https://github.com/MulleUI/MulleUIOS";
