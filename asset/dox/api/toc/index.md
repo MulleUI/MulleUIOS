@@ -49,10 +49,10 @@ The `glfw-metal` config (darwin-only) pulls in `MulleCGNanovgMTL` instead of `Mu
 #### Version API
 
 ```c
-#define MULLE_UI_OS_VERSION   ((0 << 20) | (1 << 8) | 0)
+#define MULLE_UI_OS_VERSION   ((0UL << 20) | (1 << 8) | 1)
 ```
 
-- **Purpose:** Encodes the MulleUIOS version as `major<<20 | minor<<8 | patch`. Currently `0.1.0`.
+- **Purpose:** Encodes the MulleUIOS version as `major<<20 | minor<<8 | patch`. Currently `0.1.1`.
 - **Accessor:** The implementation defines `NSUInteger MulleUIOSGetVersion( void)` in `MulleUIOS.m` returning `MULLE_UI_OS_VERSION`. Note: it is defined but not declared in the public header.
 
 #### `@interface UIWindow( OSWindowClass) <UIEventReceiver>`
