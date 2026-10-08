@@ -1,7 +1,5 @@
 # MulleUIOS
 
-Part of [MulleUI](https://github.com/MulleUI) — UIKit-shaped modular GUI libraries for mulle-objc.
-
 #### 🛸 MulleUIOS provides platform/OS specifications
 
 
@@ -163,22 +161,43 @@ The `LD_LIBRARY_PATH` will ensure the debug drivers are found during runtime.
 
 ## Add
 
-Use [mulle-sde](//github.com/mulle-sde) to add MulleUIOS to your project:
+
+
+
+
+### Add MulleUIOS as a cmake subproject
+
+In your code include its header:
+
+``` c
+#include <MulleUIOS/MulleUIOS.h>
+```
+
+Add MulleUIOS and dependencies as git submodules and link against
+them:
+
+``` bash
+git submodule add -f --name "MulleUIOS" \
+                        "https://github.com/MulleUI/MulleUIOS" \
+                        "stash/MulleUIOS"
+git submodule update --init --recursive
+```
+
+``` cmake
+include_directories( SYSTEM "${CMAKE_BINARY_DIR}/include")
+
+add_subdirectory( stash/)
+add_subdirectory( stash/MulleUIOS)
+
+target_link_libraries( ${PROJECT_NAME} PUBLIC )
+target_link_libraries( ${PROJECT_NAME} PUBLIC MulleUIOS)
+```
+
+Or let [mulle-sde](//github.com/mulle-sde) do it:
 
 ``` sh
 mulle-sde add github:MulleUI/MulleUIOS
 ```
-
-To only add the sources of MulleUIOS with dependency
-sources use [clib](https://github.com/clibs/clib):
-
-
-``` sh
-clib install --out src/MulleUI MulleUI/MulleUIOS
-```
-
-Add `-isystem src/MulleUI` to your `CFLAGS` and compile all the sources that were downloaded with your project.
-
 
 ## Install
 
